@@ -2,7 +2,7 @@
 import AppNavbar from './AppNavbar.vue';
 import LoginMenu from './header/LoginMenu.vue';
 
-import apiClient from '../js/api';
+import { ttClient } from '@/http/';
 import { store } from '../js/store.js';
 
 
@@ -58,7 +58,7 @@ export default {
         findLocation() {
             if (this.searchedText !== '') {
                 this.store.show = true;
-                apiClient.get(`${encodeURIComponent(this.searchedText)}.json?limit=5&countrySet=IT`)
+                ttClient.get(`${encodeURIComponent(this.searchedText)}.json?limit=5&countrySet=IT`)
                     .then(response => {
                         this.locations = response.data.results;
                     })
