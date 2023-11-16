@@ -75,10 +75,6 @@ export default {
     padding: 0 12px;
     background-color: white;
 
-    div[class*="col"] {
-        padding: 0;
-    }
-
     .row {
         height: 80px;
     }

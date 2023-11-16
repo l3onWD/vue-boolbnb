@@ -1,40 +1,43 @@
 <script>
-import AppHeader from './components/AppHeader.vue';
-import AppFooter from './components/AppFooter.vue';
-import { store } from './js/store.js';
+import { store } from '@/js/store.js';
+
+//*** COMPONENTS ***/
+import AppHeader from '@/components/AppHeader.vue';
+import AppFooter from '@/components/AppFooter.vue';
 
 export default {
 
-  components: { AppHeader, AppFooter },
+    components: { AppHeader, AppFooter },
 
-  data() {
-    return {
-      store: store,
+    data() {
+        return {
+            store: store,
 
+        }
+    },
+    methods: {
+
+        hide() {
+            this.store.show = false;
+        }
     }
-  },
-  methods: {
-
-    hide() {
-      this.store.show = false;
-    }
-  }
 } 
 </script>
 
 <template>
-  <div @click="hide">
-    <!-- Header -->
-    <AppHeader />
+    <div @click="hide">
+        <!-- Header -->
+        <AppHeader />
 
-    <RouterView />
+        <!-- Pages Content -->
+        <RouterView />
 
-    <!-- Footer -->
-    <AppFooter />
+        <!-- Footer -->
+        <AppFooter />
 
-  </div>
+    </div>
 </template>
 
 <style lang="scss">
-@use './assets/scss/style.scss';
+@use '@/assets/scss/style.scss';
 </style>

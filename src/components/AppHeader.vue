@@ -1,13 +1,15 @@
 <script>
-import AppNavbar from './AppNavbar.vue';
-import LoginMenu from './header/LoginMenu.vue';
-
 import { ttClient } from '@/http/';
-import { store } from '../js/store.js';
+import { store } from '@/js/store.js';
+
+//*** COMPONENTS ***/
+import AppNavbar from '@/components/AppNavbar.vue';
+import LoginMenu from '@/components/header/LoginMenu.vue';
+import HeaderBrand from '@/components/header/HeaderBrand.vue';
 
 
 export default {
-    components: { AppNavbar, LoginMenu },
+    components: { AppNavbar, LoginMenu, HeaderBrand },
 
     data() {
         return {
@@ -96,21 +98,18 @@ export default {
 </script>
 
 <template>
-    <header class="sticky-top">
+    <header class="app-header sticky-top">
 
         <!-- Top Header -->
-        <div>
+        <div class="app-header-top">
             <div class="container">
-                <div class="row px-2 px-sm-0">
+                <div class="row">
 
                     <!-- Left side -->
                     <div class="col-md-1 col-xl-4 d-none d-md-flex justify-content-start">
 
-                        <!-- Logo -->
-                        <RouterLink :to="{ name: 'home' }" class="logo">
-                            <img src="http://127.0.0.1:8000/img/logo.png" alt="logo">
-                            <h1 class="d-none d-xl-inline-block">boolbnb</h1>
-                        </RouterLink>
+                        <!-- Header Brand -->
+                        <HeaderBrand />
 
                     </div>
 
@@ -171,7 +170,7 @@ export default {
         </div>
 
         <!-- Bottom Header -->
-        <div v-if="$route.name === 'search'">
+        <div v-if="$route.name === 'search'" class="app-header-bottom">
             <AppNavbar />
         </div>
 
@@ -179,43 +178,29 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/vars' as *;
+@use '@/assets/scss/vars' as *;
 
 
 //__________________ HEADER
 header {
     background-color: white;
 
-    >div:first-child {
+    .app-header-top {
         border-bottom: 1px solid $light-grey;
     }
 
     .row {
-        @include flex($wrap: nowrap);
         height: 80px;
+
+        align-items: center;
+        flex-wrap: nowrap;
     }
 
     div[class*="col"] {
-        padding: 0;
         height: 48px
     }
 
 
-}
-
-// _____________ Left side
-.logo {
-    @include flex;
-
-    img {
-        width: 35px;
-        margin-right: 5px;
-        filter: brightness(0) saturate(100%) invert(36%) sepia(43%) saturate(4027%) hue-rotate(328deg) brightness(99%) contrast(105%);
-    }
-
-    h1 {
-        @include font(700, 25px, $color: $brand-color, $spacing: -1px);
-    }
 }
 
 //_____________ Searchbar
