@@ -1,14 +1,11 @@
 <script>
 import AppLoader from '../components/AppLoader.vue';
 
-import axios from 'axios';
+import { apiClient } from '@/http/';
 // TomTom Map
 import tt from "@tomtom-international/web-sdk-maps";
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
 
-const apartment_endpoint = 'http://localhost:8000/api/apartments/';
-const services_endpoint = 'http://localhost:8000/api/services';
-const message_endpoint = 'http://localhost:8000/api/messages';
 
 export default {
     components: { AppLoader },
@@ -30,13 +27,13 @@ export default {
     methods: {
         // Get all services
         fetchServices() {
-            axios.get(services_endpoint).then(res => { this.services = res.data })
+            apiClient.get('/services').then(res => { this.services = res.data })
         },
         // Get apartment details
         getApartment() {
-            axios.get(apartment_endpoint + this.$route.params.id)
+            apiClient.get('/apartments/' + this.$route.params.id)
                 .then(res => { this.apartment = res.data })
-                .catch(error => { this.$router.push({ name: 'not-found', query: { error: 404 } }) })
+                .catch(() => { this.$router.push({ name: 'not-found', query: { error: 404 } }) })
                 .then(() => { this.isLoading = false; });
         },
         // Send a message to the host
@@ -49,7 +46,7 @@ export default {
                 // Small loader
                 this.loadingMessage = true;
                 // Send message
-                axios.post(message_endpoint, {
+                apiClient.post('/messages', {
                     name: this.form.name,
                     email: this.form.email,
                     content: this.form.content,

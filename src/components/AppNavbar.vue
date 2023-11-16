@@ -1,7 +1,6 @@
 <script>
 import { store } from '../js/store.js';
-import axios from 'axios';
-const endpoint = 'http://localhost:8000/api/categories';
+import { apiClient } from '@/http/';
 
 
 export default {
@@ -13,7 +12,7 @@ export default {
 
     methods: {
         fetchCategories() {
-            axios.get(endpoint).then(res => { this.categories = res.data })
+            apiClient.get('/categories').then(res => { this.categories = res.data })
         },
 
         setQueryParams(category_id) {

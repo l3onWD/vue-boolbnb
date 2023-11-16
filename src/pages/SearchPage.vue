@@ -3,9 +3,7 @@ import AppLoader from '../components/AppLoader.vue';
 import SearchModal from '../components/search/SearchModal.vue';
 import ApartmentsList from '../components/apartment/ApartmentsList.vue';
 
-import axios from 'axios';
-const endpoint = 'http://127.0.0.1:8000/api/apartments/filter';
-
+import { apiClient } from '@/http/';
 
 export default {
     components: { ApartmentsList, AppLoader, SearchModal },
@@ -37,7 +35,7 @@ export default {
 
 
             // Call API
-            axios.get(endpoint, { params })
+            apiClient.get('apartments/filter', { params })
                 .then(res => {
                     this.apartments = res.data;
                 })

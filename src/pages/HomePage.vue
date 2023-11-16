@@ -3,8 +3,8 @@ import AppNavbar from '../components/AppNavbar.vue';
 import AppLoader from '../components/AppLoader.vue';
 import ApartmentsList from '../components/apartment/ApartmentsList.vue';
 
-import axios from 'axios';
-const baseUri = 'http://127.0.0.1:8000/api/apartments';
+import { apiClient } from '@/http/';
+
 
 export default {
     components: { AppNavbar, ApartmentsList, AppLoader },
@@ -19,7 +19,7 @@ export default {
     }),
     methods: {
         fetchApartments(endpoint = '', successCallback) {
-            axios.get(baseUri + endpoint)
+            apiClient.get('/apartments' + endpoint)
                 .then(successCallback)
                 .catch(err => {
                     console.error(err);

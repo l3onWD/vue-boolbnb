@@ -1,7 +1,7 @@
 <script>
-import axios from 'axios';
+import { apiClient } from '@/http/';
 import { store } from '../../js/store';
-const endpoint = 'http://127.0.0.1:8000/api/services';
+
 
 export default {
     data: () => ({
@@ -23,9 +23,9 @@ export default {
     methods: {
         fetchServices() {
 
-            axios.get(endpoint)
-                .then(res => {
-                    this.servicesList = res.data;
+            apiClient.get('/services')
+                .then(({ data }) => {
+                    this.servicesList = data;
                 })
                 .catch(err => {
                     console.error(err);

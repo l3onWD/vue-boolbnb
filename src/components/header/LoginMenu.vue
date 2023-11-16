@@ -1,6 +1,5 @@
 <script>
-const user_endpoint = 'http://localhost:8000/api/user';
-import axios from 'axios';
+import { apiClient } from '@/http/';
 
 
 export default {
@@ -17,7 +16,7 @@ export default {
         fetchUser() {
             this.loading = true;
 
-            axios.get(user_endpoint)
+            apiClient.get('/user')
                 .then(res => { this.user = res.data; this.loading = false })
                 .catch(err => { console.error(err.response.data) })
                 .then(() => { this.loading = false });
