@@ -19,7 +19,7 @@ export default {
         <div class="d-flex align-items-center gap-1 mb-3">
             <h6>Come ordiniamo i risultati</h6>
             <button class="button-info" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <font-awesome-icon :icon="['fas', 'question']" size="xs" />
+                <FontAwesomeIcon :icon="['fas', 'question']" size="xs" />
             </button>
             <div class="dropdown-menu">{{ infoMessage }} </div>
         </div>

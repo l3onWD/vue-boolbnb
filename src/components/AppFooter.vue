@@ -8,17 +8,17 @@
                 <ul>
                     <li>
                         <a href="https://www.facebook.com/">
-                            <font-awesome-icon icon="fa-brands fa-facebook" />
+                            <FontAwesomeIcon icon="fa-brands fa-facebook" />
                         </a>
                     </li>
                     <li>
                         <a href="https://www.instagram.com/">
-                            <font-awesome-icon icon="fa-brands fa-instagram" />
+                            <FontAwesomeIcon icon="fa-brands fa-instagram" />
                         </a>
                     </li>
                     <li>
                         <a href="https://twitter.com/">
-                            <font-awesome-icon icon="fa-brands fa-x-twitter" />
+                            <FontAwesomeIcon icon="fa-brands fa-x-twitter" />
                         </a>
                     </li>
                 </ul>

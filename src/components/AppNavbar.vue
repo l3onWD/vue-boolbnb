@@ -55,7 +55,7 @@ export default {
                 <div class="col-2 d-flex align-items-center justify-content-end">
                     <button class="filter" data-bs-toggle="modal" data-bs-target="#searchModal"
                         :class="{ 'has-filter': store.filters > 0 }">
-                        <font-awesome-icon icon="sliders" />
+                        <FontAwesomeIcon icon="sliders" />
                         <span v-if="store.filters > 0" class="filter-number">{{ store.filters }}</span>
                         <span class="d-none d-md-inline">Filtri</span>
                     </button>

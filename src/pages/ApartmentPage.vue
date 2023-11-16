@@ -150,7 +150,8 @@ export default {
                     <div class="d-flex align-items-center justify-content-between">
                         <h2>{{ apartment.title }}</h2>
                         <div class="circle-button">
-                            <button @click="$router.back()"><font-awesome-icon :icon="['fas', 'chevron-left']" />
+                            <button @click="$router.back()">
+                                <FontAwesomeIcon :icon="['fas', 'chevron-left']" />
                             </button>
                         </div>
                     </div>
@@ -170,7 +171,9 @@ export default {
                             <img src="../assets/img/camera.png" alt="camera">
                         </div>
                         <h3>L'host non ha ancora inserito immagini, contattalo per saperne di più!</h3>
-                        <a href="#message-form"><font-awesome-icon :icon="['fas', 'arrow-down']" bounce size="2xl" /></a>
+                        <a href="#message-form">
+                            <FontAwesomeIcon :icon="['fas', 'arrow-down']" bounce size="2xl" />
+                        </a>
                     </div>
                     <div></div>
                 </div>
@@ -308,7 +311,7 @@ export default {
                             </div>
                             <div class="dropdown mb-3">
                                 <button class="button-info" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <font-awesome-icon :icon="['fas', 'question']" size="xs" />
+                                    <FontAwesomeIcon :icon="['fas', 'question']" size="xs" />
                                 </button>
                                 <div class="dropdown-menu text-danger  ">
                                     I campi contrassegnati (*) sono obbligatori.
@@ -326,18 +329,21 @@ export default {
                                 <!-- Alert success -->
                                 <div v-if="successMessage" class="alert alert-success alert-dismissible fade show"
                                     role="alert">
-                                    <strong>{{ successMessage }} <font-awesome-icon :icon="['fas', 'thumbs-up']" bounce
-                                            size="lg" /></strong>
-                                    <button type="button" class="button-close" data-bs-dismiss="alert"
-                                        aria-label="Close"><font-awesome-icon :icon="['fas', 'x']" /></button>
+                                    <strong>{{ successMessage }}
+                                        <FontAwesomeIcon :icon="['fas', 'thumbs-up']" bounce size="lg" />
+                                    </strong>
+                                    <button type="button" class="button-close" data-bs-dismiss="alert" aria-label="Close">
+                                        <FontAwesomeIcon :icon="['fas', 'x']" />
+                                    </button>
                                 </div>
 
                                 <!-- Alert error -->
                                 <div v-if="isEmpty(errors)" class="alert alert-danger alert-dismissible fade show"
                                     role="alert">
                                     <strong>Si è verificato un errore!</strong>
-                                    <button type="button" class="button-close" data-bs-dismiss="alert"
-                                        aria-label="Close"><font-awesome-icon :icon="['fas', 'x']" /></button>
+                                    <button type="button" class="button-close" data-bs-dismiss="alert" aria-label="Close">
+                                        <FontAwesomeIcon :icon="['fas', 'x']" />
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -607,5 +613,4 @@ ul {
     .no-image {
         margin: 0;
     }
-}
-</style>
+}</style>

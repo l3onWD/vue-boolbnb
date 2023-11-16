@@ -99,7 +99,7 @@ export default {
 
         <!-- Back-top-button -->
         <button ref="topButton" class="back-top circle-button" @click="backTop()">
-            <font-awesome-icon icon="angles-up" />
+            <FontAwesomeIcon icon="angles-up" />
         </button>
     </main>
 </template>

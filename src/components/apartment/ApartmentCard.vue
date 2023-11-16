@@ -73,7 +73,8 @@ export default {
 
                 <!-- Distance -->
                 <div v-if="apartment.distance !== undefined">
-                    Distanza dal centro {{ distance }} <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
+                    Distanza dal centro {{ distance }}
+                    <FontAwesomeIcon :icon="['fas', 'location-dot']" class="me-1" />
                 </div>
 
                 <!-- Services -->

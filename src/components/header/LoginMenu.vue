@@ -39,7 +39,7 @@ export default {
 
         <!-- Generic Menu Togle -->
         <button class="dropdown-toggle d-none d-md-flex align-items-center" data-bs-toggle="dropdown">
-            <font-awesome-icon icon="bars" />
+            <FontAwesomeIcon icon="bars" />
 
             <div v-if="loading" class="user ms-2">
                 <div class="spinner-border" role="status" style="width: 15px; height: 15px;">
@@ -51,7 +51,7 @@ export default {
             </div>
 
             <div v-else class="user ms-2">
-                <font-awesome-icon icon="user" />
+                <FontAwesomeIcon icon="user" />
             </div>
 
         </button>
@@ -66,7 +66,7 @@ export default {
                     getFirstLetter(user[0]['name'])
                 }}</span>
 
-                <font-awesome-icon v-else icon="user" />
+                <FontAwesomeIcon v-else icon="user" />
             </div>
         </button>
 

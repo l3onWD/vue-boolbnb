@@ -110,7 +110,6 @@ export default {
 
                         <!-- Header Brand -->
                         <HeaderBrand />
-
                     </div>
 
                     <!-- Center -->
@@ -123,11 +122,11 @@ export default {
                                 placeholder="Inserisci un luogo" @keyup="searchLocation">
 
                             <span v-if="searchedText.length" class="remove-text" @click="searchedText = ''">
-                                <font-awesome-icon :icon="['fas', 'x']" />
+                                <FontAwesomeIcon :icon="['fas', 'x']" />
                             </span>
 
                             <button type="submit" class="input-icon" @click="checkIfBlank">
-                                <font-awesome-icon icon="magnifying-glass" />
+                                <FontAwesomeIcon icon="magnifying-glass" />
                             </button>
                         </form>
 
@@ -139,7 +138,8 @@ export default {
                                     @click="selectAddress(`${location.address.freeformAddress} ${location.address.countrySubdivision}`, location.address.freeformAddress, location.position.lat, location.position.lon, $router)">
 
                                     <div class="searched-result">
-                                        <div class="location-dot"><font-awesome-icon :icon="['fas', 'location-dot']" />
+                                        <div class="location-dot">
+                                            <FontAwesomeIcon :icon="['fas', 'location-dot']" />
                                         </div>
                                         <span>{{ location.address.freeformAddress }}</span>
                                     </div>
@@ -159,7 +159,9 @@ export default {
                             <a href="http://127.0.0.1:8000/admin/apartments/create" class="button-light">Apri un Boolbnb</a>
 
                             <!-- Globe Button -->
-                            <button class="button-light"><font-awesome-icon icon="globe" /></button>
+                            <button class="button-light">
+                                <FontAwesomeIcon icon="globe" />
+                            </button>
                         </div>
 
                         <!-- Login Dropdown -->
@@ -289,5 +291,4 @@ li:hover {
     padding: 12px;
     color: white;
     background-color: $brand-color;
-}
-</style>
+}</style>
