@@ -4,25 +4,28 @@ import { store } from '@/js/store.js';
 
 
 export default {
+
     data: () => ({
-        searchedText: '',
-        locations: [],
-        timeout: null,
-        store: store,
-        address: null,
+        address: '',
         lat: null,
         lon: null,
+
+        searchTimeoutId: null,
+        locations: [],
+        store: store
     }),
 
     methods: {
 
         searchLocation() {
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(this.findLocation, 500);
+            clearTimeout(this.searchTimeoutId);
+            this.searchTimeoutId = setTimeout(this.findLocation, 500);
         },
 
         // Go to Filter Page
-        goToFilterPage(router, address, lat, lon) {
+        goToFilterPage(address, lat, lon) {
+
+            if (!lat && !lon) return;
 
             // Create query params
             const query = {
@@ -36,51 +39,58 @@ export default {
                 'services[]': this.$route?.query['services[]']
             }
 
-            router.push({ name: 'search', query })
-        },
-
-        checkIfBlank() {
-            if (this.searchedText === '') {
-                this.address = '';
-                this.lat = '';
-                this.lon = '';
-            }
+            this.$router.push({ name: 'search', query })
         },
 
         // Find the position
         findLocation() {
-            if (this.searchedText !== '') {
-                this.store.show = true;
-                ttClient.get(`${encodeURIComponent(this.searchedText)}.json?limit=5&countrySet=IT`)
-                    .then(response => {
-                        this.locations = response.data.results;
-                    })
-                    .catch(error => {
-                        console.error('Errore durante la ricerca del luogo:', error);
-                    });
-            }
-            else {
-                this.locations = [];
+
+            // Resets
+            this.setLocationCoords();
+            this.locations = [];
+            this.store.show = true;
+
+            if (!this.address) {
                 this.store.show = false;
+                return;
             }
+
+
+            ttClient.get(`${encodeURIComponent(this.address)}.json?limit=5&countrySet=IT`)
+                .then(response => {
+                    this.locations = response.data.results;
+                })
+                .catch(error => {
+                    console.error('Errore durante la ricerca del luogo:', error);
+                });
+
         },
 
-        // Get latitude, longitude and value
-        selectAddress(value, address, lat, lon, router) {
-            this.searchedText = value;
+        // Get latitude, longitude and address
+        handleSelectLocation(address, lat, lon) {
             this.address = address;
+            this.setLocationCoords(lat, lon);
+            this.goToFilterPage(address, lat, lon)
+        },
+
+
+        setLocationCoords(lat = null, lon = null) {
             this.lat = lat;
             this.lon = lon;
-
-            this.goToFilterPage(router, address, lat, lon)
         }
     },
 
     watch: {
         '$route': {
             handler(newRoute) {
-                if (newRoute.name !== 'search') this.searchedText = '';
-                else this.searchedText = this.$route.query.address ? this.$route.query.address : '';
+                if (newRoute.name !== 'search') {
+                    this.address = '';
+                    this.setLocationCoords();
+                }
+                else {
+                    this.address = this.$route.query.address || '';
+                    this.setLocationCoords(this.$route.query.address, this.$route.query.lat, this.$route.query.lon);
+                }
             }
         }
     }
@@ -90,16 +100,16 @@ export default {
 
 <template>
     <!-- Search Location -->
-    <form @submit.prevent="goToFilterPage($router, address, lat, lon)" class="search-bar">
+    <form @submit.prevent="goToFilterPage(address, lat, lon)" class="search-location">
 
-        <input v-model.trim="searchedText" type="text" class="form-control" placeholder="Inserisci un luogo"
+        <input v-model.trim="address" type="text" class="form-control" placeholder="Inserisci un luogo"
             @keyup="searchLocation">
 
-        <button v-if="searchedText.length" class="search-reset" @click="searchedText = ''">
+        <button v-if="address" type="button" class="search-reset" @click="address = ''">
             <FontAwesomeIcon :icon="['fas', 'x']" />
         </button>
 
-        <button type="submit" class="search-submit" @click="checkIfBlank">
+        <button type="submit" class="search-submit">
             <FontAwesomeIcon icon="magnifying-glass" />
         </button>
     </form>
@@ -109,8 +119,8 @@ export default {
 
         <li v-if="!locations.length" class="p-0">Continua a scrivere...</li>
 
-        <li v-for="location in this.locations"
-            @click="selectAddress(`${location.address.freeformAddress} ${location.address.countrySubdivision}`, location.address.freeformAddress, location.position.lat, location.position.lon, $router)">
+        <li v-for="location in locations"
+            @click="handleSelectLocation(location.address.freeformAddress, location.position.lat, location.position.lon)">
 
             <div class="location-dot">
                 <FontAwesomeIcon :icon="['fas', 'location-dot']" />
@@ -127,7 +137,7 @@ export default {
 <style lang="scss" scoped>
 @use '@/assets/scss/vars' as *;
 
-.search-bar {
+.search-location {
     padding: 0;
 
     @include flex;
