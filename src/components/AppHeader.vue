@@ -24,8 +24,8 @@ export default {
                     <!-- Left side -->
                     <div class="col-md-1 col-xl-4 d-none d-md-flex justify-content-start">
 
-                        <!-- Header Brand -->
                         <HeaderBrand />
+
                     </div>
 
                     <!-- Center -->

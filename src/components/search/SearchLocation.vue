@@ -89,37 +89,38 @@ export default {
 
 
 <template>
+    <!-- Search Location -->
     <form @submit.prevent="goToFilterPage($router, address, lat, lon)" class="search-bar">
 
         <input v-model.trim="searchedText" type="text" class="form-control" placeholder="Inserisci un luogo"
             @keyup="searchLocation">
 
-        <span v-if="searchedText.length" class="remove-text" @click="searchedText = ''">
+        <button v-if="searchedText.length" class="search-reset" @click="searchedText = ''">
             <FontAwesomeIcon :icon="['fas', 'x']" />
-        </span>
+        </button>
 
-        <button type="submit" class="input-icon" @click="checkIfBlank">
+        <button type="submit" class="search-submit" @click="checkIfBlank">
             <FontAwesomeIcon icon="magnifying-glass" />
         </button>
     </form>
 
-    <!-- Address Modal -->
-    <div class="filter-modal" :class="{ 'hide': !store.show }">
-        <ul>
-            <li v-if="!locations.length" class="p-0">Continua a scrivere...</li>
-            <li v-for="location in this.locations"
-                @click="selectAddress(`${location.address.freeformAddress} ${location.address.countrySubdivision}`, location.address.freeformAddress, location.position.lat, location.position.lon, $router)">
+    <!-- Search Suggestions -->
+    <ul class="search-suggestions" :class="{ 'd-none': !store.show }">
 
-                <div class="searched-result">
-                    <div class="location-dot">
-                        <FontAwesomeIcon :icon="['fas', 'location-dot']" />
-                    </div>
-                    <span>{{ location.address.freeformAddress }}</span>
-                </div>
+        <li v-if="!locations.length" class="p-0">Continua a scrivere...</li>
 
-            </li>
-        </ul>
-    </div>
+        <li v-for="location in this.locations"
+            @click="selectAddress(`${location.address.freeformAddress} ${location.address.countrySubdivision}`, location.address.freeformAddress, location.position.lat, location.position.lon, $router)">
+
+            <div class="location-dot">
+                <FontAwesomeIcon :icon="['fas', 'location-dot']" />
+            </div>
+
+            <span>{{ location.address.freeformAddress }}</span>
+
+        </li>
+
+    </ul>
 </template>
 
 
@@ -127,11 +128,13 @@ export default {
 @use '@/assets/scss/vars' as *;
 
 .search-bar {
+    padding: 0;
+
     @include flex;
     flex-grow: 1;
-    padding: 0;
     border: 1px solid $light-grey;
     border-radius: 40px;
+
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
     overflow: hidden;
@@ -139,75 +142,67 @@ export default {
     &:hover {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
     }
-}
 
-// Input 
-.form-control {
-    border: none;
-    padding: 0 12px;
+    input {
+        padding: 0 0 0 12px;
 
-    &:focus {
         border: none;
-        box-shadow: none;
+
+        &:focus {
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    .search-reset {
+        padding: 8px 10px;
+    }
+
+    .search-submit {
+        padding: 12px;
+
+        @include flex;
+        color: white;
+        background-color: $brand-color;
+        border-radius: 0 50% 50% 0;
     }
 }
 
-.remove-text {
-    margin-right: 10px;
-    cursor: pointer;
-}
 
 
-// Search icon
-.input-icon {
-    @include flex;
-    border-radius: 0 50% 50% 0;
-    padding: 12px;
-    color: white;
-    background-color: $brand-color;
-}
-
-
-// Address Modal
-.filter-modal {
+// Search Suggestions
+.search-suggestions {
+    padding: 20px;
+    position: absolute;
     top: 100%;
+    left: 0;
     width: 100%;
+
+    @include flex(space-between, stretch, column);
     background-color: white;
     border-radius: 10px;
-    position: absolute;
-    left: 0;
-    padding: 20px;
+
     box-shadow: 0 0 8px 4px rgba($color: #000, $alpha: 0.1);
     z-index: 1;
 
-    ul {
-        @include flex(space-between, stretch, column, $gap: 7px);
-        height: 100%;
+    li {
+        padding: 10px;
+
+        @include flex(start, $gap: 15px);
+
+        cursor: pointer;
     }
-}
 
-.location-dot {
-    @include square(40px, 10px);
-    @include flex;
-    flex: 0 0 40px;
-    background-color: #ebebeb;
-}
+    li:hover {
+        background-color: rgb(245, 245, 245);
+    }
 
-.searched-result {
-    @include flex(start, $gap: 15px);
-    flex-basis: 100%;
-    cursor: pointer;
-}
+    .location-dot {
+        @include square(40px, 10px);
+        flex: 0 0 40px;
 
-li {
-    padding: 3px 10px;
-}
-
-li:hover {
-    background-color: rgb(245, 245, 245);
-}
-
-.hide {
-    display: none;
+        @include flex;
+        background-color: #ebebeb;
+    }
 }
 </style>
