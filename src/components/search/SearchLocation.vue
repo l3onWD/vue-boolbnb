@@ -27,7 +27,6 @@ export default {
 
             // Resets
             this.setLocationCoords();
-            this.locations = [];
             this.store.show = true;
 
             // Check if address is empty
@@ -83,6 +82,12 @@ export default {
             this.goToFilterPage(address, lat, lon)
         },
 
+        handleResetSearch() {
+            this.address = '';
+            this.setLocationCoords();
+            this.$refs['search-input'].focus();
+        },
+
         // Set selected location coords
         setLocationCoords(lat = null, lon = null) {
             this.lat = lat;
@@ -112,10 +117,10 @@ export default {
     <!-- Search Location -->
     <form @submit.prevent="goToFilterPage(address, lat, lon)" class="search-location">
 
-        <input v-model.trim="address" type="text" class="form-control" placeholder="Inserisci un luogo"
+        <input ref="search-input" v-model.trim="address" type="text" class="form-control" placeholder="Inserisci un luogo"
             @keyup="searchLocation">
 
-        <button v-if="address" type="button" class="search-reset" @click="address = ''">
+        <button v-if="address" type="button" class="search-reset" @click="handleResetSearch">
             <FontAwesomeIcon :icon="['fas', 'x']" />
         </button>
 
