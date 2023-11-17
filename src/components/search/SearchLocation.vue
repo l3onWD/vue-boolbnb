@@ -1,6 +1,5 @@
 <script>
 import { ttClient } from '@/http/';
-import { store } from '@/js/store.js';
 
 
 export default {
@@ -9,10 +8,10 @@ export default {
         address: '',
         lat: null,
         lon: null,
+        isActive: false,
 
         searchTimeoutId: null,
         locations: [],
-        store: store
     }),
 
     methods: {
@@ -27,13 +26,10 @@ export default {
 
             // Resets
             this.setLocationCoords();
-            this.store.show = true;
 
             // Check if address is empty
-            if (!this.address) {
-                this.store.show = false;
-                return;
-            }
+            if (!this.address) return;
+            this.isActive = true;
 
             // Fetch TT API
             ttClient.get(`${encodeURIComponent(this.address)}.json?limit=5&countrySet=IT`)
@@ -85,6 +81,7 @@ export default {
         handleResetSearch() {
             this.address = '';
             this.setLocationCoords();
+            this.locations = [];
             this.$refs['search-input'].focus();
         },
 
@@ -92,6 +89,10 @@ export default {
         setLocationCoords(lat = null, lon = null) {
             this.lat = lat;
             this.lon = lon;
+        },
+
+        handleSuggestionsClose() {
+            this.isActive = false;
         }
     },
 
@@ -115,10 +116,11 @@ export default {
 
 <template>
     <!-- Search Location -->
-    <form @submit.prevent="goToFilterPage(address, lat, lon)" class="search-location">
+    <form @submit.prevent="goToFilterPage(address, lat, lon)" class="search-location"
+        v-click-outside="handleSuggestionsClose">
 
         <input ref="search-input" v-model.trim="address" type="text" class="form-control" placeholder="Inserisci un luogo"
-            @keyup="searchLocation">
+            @keyup="searchLocation" @click="isActive = !isActive">
 
         <button v-if="address" type="button" class="search-reset" @click="handleResetSearch">
             <FontAwesomeIcon :icon="['fas', 'x']" />
@@ -130,7 +132,7 @@ export default {
     </form>
 
     <!-- Search Suggestions -->
-    <ul class="search-suggestions" :class="{ 'd-none': !store.show }">
+    <ul v-if="isActive" class="search-suggestions">
 
         <li v-if="!locations.length" class="p-0">Continua a scrivere...</li>
 
