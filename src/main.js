@@ -7,6 +7,9 @@ import 'bootstrap/js/index.esm';
 // Router
 import { router } from '@/router/';
 
+// Custom Directives
+import { clickOutside } from '@/directives/';
+
 // Fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -21,6 +24,7 @@ const app = createApp(App);
 
 app.use(router);
 app.component('FontAwesomeIcon', FontAwesomeIcon);
+app.directive('click-outside', clickOutside);
 
 app.mount("#app");
 
