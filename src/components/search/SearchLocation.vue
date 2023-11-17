@@ -22,6 +22,40 @@ export default {
             this.searchTimeoutId = setTimeout(this.findLocation, 500);
         },
 
+        // Find the position
+        findLocation() {
+
+            // Resets
+            this.setLocationCoords();
+            this.locations = [];
+            this.store.show = true;
+
+            // Check if address is empty
+            if (!this.address) {
+                this.store.show = false;
+                return;
+            }
+
+            // Fetch TT API
+            ttClient.get(`${encodeURIComponent(this.address)}.json?limit=5&countrySet=IT`)
+                .then(response => {
+
+                    // Get locations data
+                    this.locations = response.data.results.map(location => {
+                        return {
+                            address: location.address.freeformAddress,
+                            lat: location.position.lat,
+                            lon: location.position.lon
+                        };
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Errore durante la ricerca del luogo:', error);
+                });
+
+        },
+
         // Go to Filter Page
         goToFilterPage(address, lat, lon) {
 
@@ -42,30 +76,6 @@ export default {
             this.$router.push({ name: 'search', query })
         },
 
-        // Find the position
-        findLocation() {
-
-            // Resets
-            this.setLocationCoords();
-            this.locations = [];
-            this.store.show = true;
-
-            if (!this.address) {
-                this.store.show = false;
-                return;
-            }
-
-
-            ttClient.get(`${encodeURIComponent(this.address)}.json?limit=5&countrySet=IT`)
-                .then(response => {
-                    this.locations = response.data.results;
-                })
-                .catch(error => {
-                    console.error('Errore durante la ricerca del luogo:', error);
-                });
-
-        },
-
         // Get latitude, longitude and address
         handleSelectLocation(address, lat, lon) {
             this.address = address;
@@ -73,7 +83,7 @@ export default {
             this.goToFilterPage(address, lat, lon)
         },
 
-
+        // Set selected location coords
         setLocationCoords(lat = null, lon = null) {
             this.lat = lat;
             this.lon = lon;
@@ -89,7 +99,7 @@ export default {
                 }
                 else {
                     this.address = this.$route.query.address || '';
-                    this.setLocationCoords(this.$route.query.address, this.$route.query.lat, this.$route.query.lon);
+                    this.setLocationCoords(this.$route.query.lat, this.$route.query.lon);
                 }
             }
         }
@@ -119,14 +129,13 @@ export default {
 
         <li v-if="!locations.length" class="p-0">Continua a scrivere...</li>
 
-        <li v-for="location in locations"
-            @click="handleSelectLocation(location.address.freeformAddress, location.position.lat, location.position.lon)">
+        <li v-for="location in locations" @click="handleSelectLocation(location.address, location.lat, location.lon)">
 
             <div class="location-dot">
                 <FontAwesomeIcon :icon="['fas', 'location-dot']" />
             </div>
 
-            <span>{{ location.address.freeformAddress }}</span>
+            <span>{{ location.address }}</span>
 
         </li>
 
