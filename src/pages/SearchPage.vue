@@ -1,6 +1,6 @@
 <script>
 import AppLoader from '@/components/AppLoader.vue';
-import AppNavbar from '@/components/AppNavbar.vue';
+import SearchFilters from '@/components/search/SearchFilters.vue';
 import SearchModal from '@/components/search/SearchModal.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
@@ -8,7 +8,7 @@ import { apiClient } from '@/http/';
 
 
 export default {
-    components: { AppNavbar, ApartmentsList, AppLoader, SearchModal },
+    components: { SearchFilters, ApartmentsList, AppLoader, SearchModal },
 
     data: () => ({
         apartments: [],
@@ -67,7 +67,7 @@ export default {
 
         <!-- Filters -->
         <div class="search-filters">
-            <AppNavbar />
+            <SearchFilters />
         </div>
 
         <!-- Page Cotent -->

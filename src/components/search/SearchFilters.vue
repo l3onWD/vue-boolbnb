@@ -1,5 +1,5 @@
 <script>
-import { store } from '../js/store.js';
+import { store } from '@/js/store.js';
 import { apiClient } from '@/http/';
 
 
@@ -67,7 +67,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/vars' as *;
+@use '@/assets/scss/vars' as *;
 
 //__________________ NAVBAR
 

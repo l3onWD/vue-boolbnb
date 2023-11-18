@@ -1,5 +1,4 @@
 <script>
-import AppNavbar from '../components/AppNavbar.vue';
 import AppLoader from '../components/AppLoader.vue';
 import ApartmentsList from '../components/apartment/ApartmentsList.vue';
 
@@ -7,7 +6,7 @@ import { apiClient } from '@/http/';
 
 
 export default {
-    components: { AppNavbar, ApartmentsList, AppLoader },
+    components: { ApartmentsList, AppLoader },
     data: () => ({
         apartmentsPromoted: [],
         apartmentsRandom: [],
