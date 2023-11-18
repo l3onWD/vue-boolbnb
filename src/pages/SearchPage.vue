@@ -1,12 +1,14 @@
 <script>
-import AppLoader from '../components/AppLoader.vue';
-import SearchModal from '../components/search/SearchModal.vue';
-import ApartmentsList from '../components/apartment/ApartmentsList.vue';
+import AppLoader from '@/components/AppLoader.vue';
+import AppNavbar from '@/components/AppNavbar.vue';
+import SearchModal from '@/components/search/SearchModal.vue';
+import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
 import { apiClient } from '@/http/';
 
+
 export default {
-    components: { ApartmentsList, AppLoader, SearchModal },
+    components: { AppNavbar, ApartmentsList, AppLoader, SearchModal },
 
     data: () => ({
         apartments: [],
@@ -62,6 +64,12 @@ export default {
 
 <template>
     <main>
+
+        <!-- Filters -->
+        <div class="search-filters">
+            <AppNavbar />
+        </div>
+
         <!-- Page Cotent -->
         <div v-if="!isLoading">
 
@@ -82,3 +90,11 @@ export default {
     <!-- Search Modal -->
     <SearchModal />
 </template>
+
+<style scoped>
+.search-filters {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+</style>

@@ -1,14 +1,13 @@
 <script>
 
 //*** COMPONENTS ***/
-import AppNavbar from '@/components/AppNavbar.vue';
 import LoginMenu from '@/components/header/LoginMenu.vue';
 import HeaderBrand from '@/components/header/HeaderBrand.vue';
 import SearchLocation from '@/components/search/SearchLocation.vue';
 
 
 export default {
-    components: { AppNavbar, LoginMenu, HeaderBrand, SearchLocation }
+    components: { LoginMenu, HeaderBrand, SearchLocation }
 }
 
 </script>
@@ -56,11 +55,6 @@ export default {
 
                 </div>
             </div>
-        </div>
-
-        <!-- Bottom Header -->
-        <div v-if="$route.name === 'search'" class="app-header-bottom">
-            <AppNavbar />
         </div>
 
     </header>
