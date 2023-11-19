@@ -1,6 +1,5 @@
 <script>
 import { apiClient } from '@/http/';
-import { store } from '@/js/store';
 
 
 //*** COMPONENTS ***/
@@ -19,7 +18,6 @@ export default {
             radiusKm: 20,
             'services[]': [],
         },
-        store: store,
         isModalVisible: false,
         totalFilters: 0
 
