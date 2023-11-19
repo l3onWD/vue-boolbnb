@@ -56,7 +56,7 @@ const filtersCount = computed(() => {
     // Count query params
     if (rooms) count++;
     if (beds) count++;
-    if (radius != 20000) count++;
+    if (radius && radius != 20000) count++;
     if (services) count += services.length;
 
     return count;
