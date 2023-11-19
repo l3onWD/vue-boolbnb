@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-    <header class="app-header sticky-top">
+    <header class="app-header">
 
         <!-- Top Header -->
         <div class="app-header-top">
@@ -64,8 +64,12 @@ export default {
 @use '@/assets/scss/vars' as *;
 
 
-header {
+.app-header {
+    position: sticky;
+    top: 0;
+
     background-color: white;
+    z-index: 1;
 
     .app-header-top {
         border-bottom: 1px solid $light-grey;
