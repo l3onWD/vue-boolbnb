@@ -1,6 +1,7 @@
 // Colors
 $brand-color: #ff385c; //radical-red
 $light-grey: #dddddd;
+$col-grey: #808080;
 
 // Google font
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
@@ -8,7 +9,7 @@ $light-grey: #dddddd;
 $roboto: 'Roboto', sans-serif;
 
 // Mixin
-@mixin flex($justify-content: center, $align-items: center, $direction: row, $wrap: unset, $gap: 0){
+@mixin flex($justify-content: center, $align-items: center, $direction: row, $wrap: unset, $gap: 0) {
     display: flex;
     justify-content: $justify-content;
     align-items: $align-items;
@@ -17,7 +18,7 @@ $roboto: 'Roboto', sans-serif;
     gap: $gap;
 }
 
-@mixin font($weight: 400, $size: 14px, $family: $roboto, $color:black, $spacing:normal){
+@mixin font($weight: 400, $size: 14px, $family: $roboto, $color: black, $spacing: normal) {
     font-weight: $weight;
     font-size: $size;
     font-family: $family;
@@ -25,23 +26,25 @@ $roboto: 'Roboto', sans-serif;
     letter-spacing: $spacing;
 }
 
-@mixin circle($size){
+@mixin circle($size) {
     border-radius: 50%;
     width: $size;
     height: $size;
 }
 
-@mixin square($size, $radius:0){
+@mixin square($size, $radius: 0) {
     border-radius: $radius;
     width: $size;
     height: $size;
 }
 
-@mixin max-size($max: false, $width: 100%, $height: 100%, $max-width: 100%, $max-height: 100%){
-    @if $max{
+@mixin max-size($max: false, $width: 100%, $height: 100%, $max-width: 100%, $max-height: 100%) {
+    @if $max {
         max-width: $max-width;
         max-height: $max-height;
-    }@else{
+    }
+
+    @else {
         width: $width;
         height: $height;
     }
