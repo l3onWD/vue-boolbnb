@@ -146,7 +146,7 @@ updateFilters();
         <span class="d-none d-md-inline">Filtri</span>
 
         <!-- Count Badge -->
-        <span v-if="filtersCount" class="filter-number">{{ filtersCount }}</span>
+        <span v-if="filtersCount" class="filters-count">{{ filtersCount }}</span>
     </button>
 
     <!-- Advanced Filters Modal -->
@@ -228,16 +228,16 @@ updateFilters();
         border: 2px solid #000;
     }
 
-    .filter-number {
+    .filters-count {
         @include circle(20px);
         position: absolute;
         top: -8px;
         left: 65%;
 
         @include flex();
-        background-color: #000;
-        font-size: 10px;
+        background-color: $brand-color;
         color: #fff;
+        font-size: 10px;
     }
 }
 
@@ -248,7 +248,7 @@ updateFilters();
         border-radius: 10px;
         padding: 15px 12px;
 
-        .filter-number {
+        .filters-count {
             left: 85%;
         }
     }
