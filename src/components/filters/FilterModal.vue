@@ -4,6 +4,14 @@ import { store } from '../../js/store';
 
 
 export default {
+
+    props: {
+        isVisible: {
+            type: Boolean,
+            default: false
+        }
+    },
+
     data: () => ({
         servicesList: [],
         filters: {
@@ -128,19 +136,19 @@ export default {
 
 
 <template>
-    <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div v-if="isVisible" class="filter-modal">
 
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+        <Transition name="slide-down">
+            <div class="filter-modal-content">
 
                 <!-- Header -->
-                <div class="modal-header">
+                <div class="filter-modal-header">
                     <h1 class="modal-title fs-5">Filtri</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close"></button>
                 </div>
 
                 <!-- Body -->
-                <div class="modal-body">
+                <div class="filter-modal-body">
 
                     <!-- Filters -->
                     <form @submit.prevent="applyFilters" class="container-fluid">
@@ -188,18 +196,16 @@ export default {
 
                             <!-- Actions -->
                             <div class="col-12 border-top text-end pt-3">
-                                <button @click="resetFilters" type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cancella
+                                <button @click="resetFilters" type="button" class="btn btn-secondary">Cancella
                                     Tutto</button>
-                                <button type="submit" class="btn btn-success ms-2" data-bs-dismiss="modal">Mostra</button>
+                                <button type="submit" class="btn btn-success ms-2">Mostra</button>
                             </div>
 
                         </div>
                     </form>
                 </div>
-
             </div>
-        </div>
+        </Transition>
 
     </div>
 </template>
@@ -208,14 +214,60 @@ export default {
 <style lang="scss" scoped>
 @use '../../assets/scss/vars' as *;
 
-.service-icon {
-    @include square(30px);
-    overflow: hidden;
 
-    img {
-        @include max-size;
-        object-fit: contain;
-        filter: brightness(0) saturate(100%);
+.filter-modal {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba($color: #000, $alpha: 0.6);
+    z-index: 1;
+    cursor: pointer;
+
+    &-content {
+        margin: auto;
+        max-width: 500px;
+
+        background-color: #fff;
+        border-radius: 0.5rem;
+        border: 1px solid $light-grey;
     }
+
+    &-header {
+        padding: 1rem;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid $light-grey;
+    }
+
+    &-body {
+        padding: 1rem;
+    }
+
+    .service-icon {
+        @include square(30px);
+        overflow: hidden;
+
+        img {
+            @include max-size;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%);
+        }
+    }
+
+}
+
+.slide-down-enter-active,
+.slide-down-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+    opacity: 0;
 }
 </style>
