@@ -1,13 +1,13 @@
 <script>
 import AppLoader from '@/components/AppLoader.vue';
-import SearchFilters from '@/components/search/SearchFilters.vue';
+import FiltersBar from '@/components/filters/FiltersBar.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
 import { apiClient } from '@/http/';
 
 
 export default {
-    components: { SearchFilters, ApartmentsList, AppLoader },
+    components: { FiltersBar, ApartmentsList, AppLoader },
 
     data: () => ({
         apartments: [],
@@ -66,7 +66,7 @@ export default {
 
         <!-- Filters -->
         <div class="search-filters">
-            <SearchFilters />
+            <FiltersBar />
         </div>
 
         <!-- Page Cotent -->
