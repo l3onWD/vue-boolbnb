@@ -78,8 +78,8 @@ export default {
 
         &:hover,
         &.active {
-            border-color: $col-grey;
-            color: black;
+            border-color: $brand-color;
+            color: #000;
 
             img {
                 filter: brightness(0) saturate(100%);
