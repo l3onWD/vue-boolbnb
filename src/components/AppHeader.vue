@@ -1,14 +1,9 @@
-<script>
+<script setup>
 
 //*** COMPONENTS ***/
 import LoginMenu from '@/components/header/LoginMenu.vue';
 import HeaderBrand from '@/components/header/HeaderBrand.vue';
 import SearchLocation from '@/components/search/SearchLocation.vue';
-
-
-export default {
-    components: { LoginMenu, HeaderBrand, SearchLocation }
-}
 
 </script>
 
