@@ -30,7 +30,7 @@ export default {
 </script>
 
 <template>
-    <div class="search-filters">
+    <div class="filters-bar">
 
         <div class="container">
 
@@ -48,7 +48,7 @@ export default {
 @use '@/assets/scss/vars' as *;
 
 
-.search-filters {
+.filters-bar {
     background-color: white;
 
     >.container {

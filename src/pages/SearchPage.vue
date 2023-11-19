@@ -65,7 +65,7 @@ export default {
     <main>
 
         <!-- Filters -->
-        <div class="search-filters">
+        <div class="filters-bar-container">
             <FiltersBar />
         </div>
 
@@ -88,7 +88,7 @@ export default {
 </template>
 
 <style scoped>
-.search-filters {
+.filters-bar-container {
     position: sticky;
     top: 0;
     z-index: 1;
