@@ -1,5 +1,8 @@
 <script setup>
 
+//*** BRAND NAME ***/
+const appName = import.meta.env.VITE_APP_NAME || 'Brand';
+
 </script>
 
 
@@ -9,7 +12,7 @@
         <img src="@/assets/img/logo.png" alt="logo">
 
         <!-- Brand -->
-        <h1 class="d-none d-xl-inline-block">boolbnb</h1>
+        <h1 class="d-none d-xl-inline-block">{{ appName }}</h1>
 
     </RouterLink>
 </template>
