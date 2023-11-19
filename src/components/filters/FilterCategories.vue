@@ -1,30 +1,41 @@
-<script>
-export default {
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-    props: {
-        categories: {
-            type: Array,
-            default: []
-        }
-    },
 
-    computed: {
+//*** PROPS ***/
+defineProps({
+    categories: {
+        type: Array,
+        default: []
+    }
+});
 
-        queryParams() {
-            if (!this.$route) return null
-            return {
-                address: this.$route.query.address,
-                lat: this.$route.query.lat,
-                lon: this.$route.query.lon,
-                rooms: this.$route.query.rooms,
-                beds: this.$route.query.beds,
-                radius: this.$route.query.radius,
-                'services[]': this.$route.query['services[]']
-            }
-        }
-    },
 
-}
+//*** CATEGORIES ***/
+// Data
+const route = useRoute();
+
+// Compute query params
+const queryParams = computed(() => {
+
+    // Check if route is initialized
+    if (!route) return null;
+
+    // Get data
+    const { address, lat, lon, rooms, beds, radius, 'services[]': services } = route.query;
+
+    return {
+        address,
+        lat,
+        lon,
+        rooms,
+        beds,
+        radius,
+        'services[]': services
+    }
+});
+
 </script>
 
 
@@ -32,7 +43,7 @@ export default {
     <ul class="filter-categories">
         <li v-for="category in categories" :key="category.id">
             <RouterLink :to="{ name: 'search', query: { ...queryParams, category: category.id } }"
-                class="filter-categories-link" :class="{ 'active': this.$route?.query.category == category.id }">
+                class="filter-categories-link" :class="{ 'active': route?.query.category == category.id }">
                 <img :src="`src/assets/img/category/${category.img}`" :alt="category.name">
                 <div>{{ category.name }}</div>
             </RouterLink>

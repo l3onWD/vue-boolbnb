@@ -1,4 +1,5 @@
-<script>
+<script setup>
+import { reactive } from 'vue';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***/
@@ -6,27 +7,23 @@ import FilterCategories from '@/components/filters/FilterCategories.vue';
 import FilterAdvanced from '@/components/filters/FilterAdvanced.vue';
 
 
-export default {
+//*** CATEGORIES ***/
+// Data
+const categories = reactive([]);
 
-    components: { FilterCategories, FilterAdvanced },
-
-    data: () => ({
-        categories: []
-    }),
-
-    methods: {
-
-        fetchCategories() {
-            apiClient.get('/categories')
-                .then(res => { this.categories = res.data })
-                .catch(err => { console.error(err) });
-        }
-    },
-
-    created() {
-        this.fetchCategories();
-    }
+// Functions
+const fetchCategories = () => {
+    apiClient.get('/categories')
+        .then(({ data }) => {
+            categories.splice(-1);
+            categories.push(...data);
+        })
+        .catch(err => { console.error(err) });
 }
+
+// Get Categories
+fetchCategories();
+
 </script>
 
 <template>
