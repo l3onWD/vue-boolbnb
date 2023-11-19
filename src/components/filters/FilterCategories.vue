@@ -32,7 +32,7 @@ export default {
     <ul class="filter-categories">
         <li v-for="category in categories" :key="category.id">
             <RouterLink :to="{ name: 'search', query: { ...queryParams, category: category.id } }"
-                class="filter-categories-link" :class="{ 'active': this.$route?.query.category === category.id }">
+                class="filter-categories-link" :class="{ 'active': this.$route?.query.category == category.id }">
                 <img :src="`src/assets/img/category/${category.img}`" :alt="category.name">
                 <div>{{ category.name }}</div>
             </RouterLink>
