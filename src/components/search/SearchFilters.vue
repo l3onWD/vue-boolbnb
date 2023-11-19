@@ -36,125 +36,122 @@ export default {
 </script>
 
 <template>
-    <nav class="bool-nav">
+    <div class="search-filters">
+
         <div class="container">
-            <div class="row">
 
-                <!-- Categories -->
-                <ul class="col-10">
-                    <li v-for="category in categories" :key="category.id">
-                        <RouterLink :to="{ name: 'search', query: setQueryParams(category.id) }" class="category-link"
-                            :class="{ 'active': $route.query?.category == category.id }">
-                            <img :src="`src/assets/img/category/${category.img}`" :alt="category.name">
-                            <div>{{ category.name }}</div>
-                        </RouterLink>
-                    </li>
-                </ul>
+            <!-- Categories Filter -->
+            <ul class="filter-categories">
+                <li v-for="category in categories" :key="category.id">
+                    <RouterLink :to="{ name: 'search', query: setQueryParams(category.id) }" class="filter-categories-link"
+                        :class="{ 'active': $route.query?.category == category.id }">
+                        <img :src="`src/assets/img/category/${category.img}`" :alt="category.name">
+                        <div>{{ category.name }}</div>
+                    </RouterLink>
+                </li>
+            </ul>
 
-                <!-- Advanced Filters -->
-                <div class="col-2 d-flex align-items-center justify-content-end">
-                    <button class="filter" data-bs-toggle="modal" data-bs-target="#searchModal"
-                        :class="{ 'has-filter': store.filters > 0 }">
-                        <FontAwesomeIcon icon="sliders" />
-                        <span v-if="store.filters > 0" class="filter-number">{{ store.filters }}</span>
-                        <span class="d-none d-md-inline">Filtri</span>
-                    </button>
-                </div>
+            <!-- Advanced Filters Toggle -->
+            <button class="filter-advanced-toggle flex-shrink-0 ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"
+                :class="{ 'has-filter': store.filters > 0 }">
+                <FontAwesomeIcon icon="sliders" />
+                <span class="d-none d-md-inline">Filtri</span>
 
-            </div>
+                <!-- Count Badge -->
+                <span v-if="store.filters > 0" class="filter-number">{{ store.filters }}</span>
+            </button>
+
         </div>
-    </nav>
+    </div>
 </template>
 
 <style lang="scss" scoped>
 @use '@/assets/scss/vars' as *;
 
-//__________________ NAVBAR
 
-.bool-nav {
-    padding: 0 12px;
+.search-filters {
     background-color: white;
 
-    .row {
+    >.container {
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-categories {
         height: 80px;
-    }
 
-    ul {
         @include flex(start);
-        height: 100%;
-        overflow-x: scroll;
-        overflow-y: hidden;
         gap: 15px;
-    }
 
-    li {
-        height: 100%;
-    }
+        overflow-x: scroll;
 
-    .category-link {
-        height: 100%;
-        padding: 0 10px;
-
-        @include flex($direction: column);
-        gap: 5px;
-        color: grey;
-        font-size: 12px;
-        border-bottom: 3px solid transparent;
-        font-weight: 500;
-        text-wrap: nowrap;
-
-        transition: all 0.5s;
-
-
-
-        img {
-            filter: invert(40%) sepia(55%) saturate(0%) hue-rotate(206deg) brightness(113%) contrast(83%);
+        li {
+            height: 100%;
         }
 
-        &:hover,
-        &.active {
-            border-bottom: 3px solid grey;
-            color: black;
+        .filter-categories-link {
+            height: 100%;
+            padding: 0 10px;
+
+            @include flex($direction: column);
+            gap: 5px;
+            color: $col-grey;
+            font-size: 12px;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            text-wrap: nowrap;
+
+            transition: all 0.5s;
 
             img {
-                filter: brightness(0) saturate(100%);
+                width: 25px;
+
+                filter: invert(40%) sepia(55%) saturate(0%) hue-rotate(206deg) brightness(113%) contrast(83%);
+            }
+
+            &:hover,
+            &.active {
+                border-color: $col-grey;
+                color: black;
+
+                img {
+                    filter: brightness(0) saturate(100%);
+                }
             }
         }
     }
 
-    img {
-        width: 25px;
-    }
 
-
-    .filter {
-        @include flex;
-        @include circle(40px);
-        border: 1px solid $light-grey;
+    .filter-advanced-toggle {
         position: relative;
+
+        @include circle(40px);
+
+        @include flex;
+        gap: 10px;
+        border: 1px solid $light-grey;
+
+        &.has-filter {
+            border: 2px solid #000;
+        }
 
         .filter-number {
             @include circle(20px);
-            @include flex();
             position: absolute;
             top: -8px;
             left: 65%;
-            background-color: black;
+
+            @include flex();
+            background-color: #000;
             font-size: 10px;
-            color: white;
+            color: #fff;
         }
     }
 
-
-
-    .has-filter {
-        border: 2px solid black;
-    }
-
+    // MEDIA MD
     @media (min-width: 768px) {
-        .filter {
+        .filter-advanced-toggle {
             @include circle(auto);
-            gap: 10px;
             border-radius: 10px;
             padding: 15px 12px;
 
