@@ -1,18 +1,17 @@
 <script>
-import { store } from '@/js/store.js';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***/
 import FilterCategories from '@/components/filters/FilterCategories.vue';
+import FilterAdvanced from '@/components/filters/FilterAdvanced.vue';
 
 
 export default {
 
-    components: { FilterCategories },
+    components: { FilterCategories, FilterAdvanced },
 
     data: () => ({
-        categories: [],
-        store: store
+        categories: []
     }),
 
     methods: {
@@ -36,17 +35,10 @@ export default {
         <div class="container">
 
             <!-- Categories Filter -->
-            <FilterCategories :categories="categories" />
+            <FilterCategories :categories="categories" class="flex-grow-1" />
 
-            <!-- Advanced Filters Toggle -->
-            <button class="filter-advanced-toggle flex-shrink-0 ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"
-                :class="{ 'has-filter': store.filters > 0 }">
-                <FontAwesomeIcon icon="sliders" />
-                <span class="d-none d-md-inline">Filtri</span>
-
-                <!-- Count Badge -->
-                <span v-if="store.filters > 0" class="filter-number">{{ store.filters }}</span>
-            </button>
+            <!-- Advanced Filters -->
+            <FilterAdvanced />
 
         </div>
     </div>
@@ -62,46 +54,6 @@ export default {
     >.container {
         display: flex;
         align-items: center;
-    }
-
-
-    .filter-advanced-toggle {
-        position: relative;
-
-        @include circle(40px);
-
-        @include flex;
-        gap: 10px;
-        border: 1px solid $light-grey;
-
-        &.has-filter {
-            border: 2px solid #000;
-        }
-
-        .filter-number {
-            @include circle(20px);
-            position: absolute;
-            top: -8px;
-            left: 65%;
-
-            @include flex();
-            background-color: #000;
-            font-size: 10px;
-            color: #fff;
-        }
-    }
-
-    // MEDIA MD
-    @media (min-width: 768px) {
-        .filter-advanced-toggle {
-            @include circle(auto);
-            border-radius: 10px;
-            padding: 15px 12px;
-
-            .filter-number {
-                left: 85%;
-            }
-        }
     }
 }
 </style>
