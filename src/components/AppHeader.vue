@@ -3,7 +3,7 @@
 //*** COMPONENTS ***/
 import LoginMenu from '@/components/header/LoginMenu.vue';
 import HeaderBrand from '@/components/header/HeaderBrand.vue';
-import SearchLocation from '@/components/search/SearchLocation.vue';
+import SearchLocation from '@/components/header/SearchLocation.vue';
 
 </script>
 
@@ -17,20 +17,16 @@ import SearchLocation from '@/components/search/SearchLocation.vue';
 
                     <!-- Left side -->
                     <div class="col-md-1 col-xl-4 d-none d-md-flex justify-content-start">
-
                         <HeaderBrand />
-
                     </div>
 
                     <!-- Center -->
                     <div class="col-10 col-md-6 col-xl-4 d-flex align-items-center position-relative">
-
                         <SearchLocation />
-
                     </div>
 
                     <!-- Right side -->
-                    <div class="col-2 col-md-5 d-flex col-xl-4 justify-content-end gap-2">
+                    <div class="col-2 col-md-5 col-xl-4 d-flex justify-content-end gap-2">
 
                         <!-- Actions -->
                         <div class="d-none d-md-flex">
@@ -64,7 +60,7 @@ import SearchLocation from '@/components/search/SearchLocation.vue';
     top: 0;
 
     background-color: white;
-    z-index: 1;
+    z-index: 2;
 
     .app-header-top {
         border-bottom: 1px solid $light-grey;
