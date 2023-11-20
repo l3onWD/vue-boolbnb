@@ -45,14 +45,14 @@ fetchUser();
             <!-- Bars icon -->
             <FontAwesomeIcon icon="bars" class="d-none d-md-block me-2" />
 
-            <div class="user">
+            <div class="login-menu-icon">
 
                 <!-- Bootstrap Spinner -->
                 <div v-if="isLoading" class="spinner-border" role="status" style="width: 15px; height: 15px;">
                 </div>
 
                 <!-- User Logged Letter -->
-                <span v-else-if="user" id="admin-name">{{ userNameChar }}</span>
+                <span v-else-if="user">{{ userNameChar }}</span>
 
                 <!-- User Disconnected Icon -->
                 <FontAwesomeIcon v-else icon="user" />
@@ -129,8 +129,9 @@ fetchUser();
         display: none;
     }
 
-    .user {
+    .login-menu-icon {
         @include circle(40px);
+
         @include flex;
         color: white;
         background-color: black;
@@ -145,8 +146,10 @@ fetchUser();
 @media (min-width: 768px) {
     .login-menu {
         padding: 0 6px 0 10px;
+
         border: 1px solid $light-grey;
         border-radius: 40px;
+
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
         transition: box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
 
@@ -154,7 +157,7 @@ fetchUser();
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
         }
 
-        .user {
+        .login-menu-icon {
             @include circle(30px);
         }
     }
