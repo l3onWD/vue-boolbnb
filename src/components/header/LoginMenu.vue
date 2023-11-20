@@ -1,11 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { apiClient } from '@/http/';
 
 
 //*** DATA ***/
-const user = ref('');
+const user = ref(null);
 const isLoading = ref(false);
+
+// Calculate username first letter
+const userNameChar = computed(() => {
+    if (!user.value) return '';
+    return user.value.name.substring(0, 1).toUpperCase();
+});
 
 
 //*** FUNCTIONS ***/
@@ -15,13 +21,13 @@ const fetchUser = () => {
     isLoading.value = true;
 
     apiClient.get('/user')
-        .then(res => { user.value = res.data; isLoading.value = false })
+        .then(res => {
+            user.value = res.data[0];
+            isLoading.value = false;
+        })
         .catch(err => { console.error(err.response.data) })
         .then(() => { isLoading.value = false });
 }
-
-// Get First letter of a string
-const getFirstLetter = (word) => (word.substring(0, 1).toUpperCase());
 
 
 //*** FETCH USERS ***/
@@ -46,7 +52,7 @@ fetchUser();
                 </div>
 
                 <!-- User Logged Letter -->
-                <span v-else-if="user.length && !isLoading" id="admin-name">{{ getFirstLetter(user[0]['name']) }}</span>
+                <span v-else-if="user" id="admin-name">{{ userNameChar }}</span>
 
                 <!-- User Disconnected Icon -->
                 <FontAwesomeIcon v-else icon="user" />
@@ -60,7 +66,7 @@ fetchUser();
         <ul class="dropdown-menu">
 
             <!-- Account Menu -->
-            <li v-if="user.length">
+            <li v-if="user">
                 <ul>
                     <li>
                         <a class="dropdown-item" href="http://127.0.0.1:8000/admin/apartments">I miei
@@ -95,14 +101,6 @@ fetchUser();
                     </li>
                     <li>
                         <a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <RouterLink class="dropdown-item" :to="{ name: 'home' }">Torna alla Home</RouterLink>
                     </li>
                 </ul>
             </li>
