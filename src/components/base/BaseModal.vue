@@ -28,27 +28,29 @@ const onClickOutside = (e) => {
 
 
 <template>
-    <Transition name="fade">
+    <Teleport to="body">
+        <Transition name="fade">
 
-        <div v-if="isVisible" @click="onClickOutside" class="modal-panel">
+            <div v-if="isVisible" @click="onClickOutside" class="modal-panel">
 
-            <div class="modal-panel-content">
+                <div class="modal-panel-content">
 
-                <!-- Header -->
-                <div class="modal-panel-header">
-                    <h5>{{ title }}</h5>
-                    <button @click="$emit('@close')" type="button" class="btn-close"></button>
+                    <!-- Header -->
+                    <div class="modal-panel-header">
+                        <h5>{{ title }}</h5>
+                        <button @click="$emit('@close')" type="button" class="btn-close"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-panel-body">
+                        <slot></slot>
+                    </div>
+
                 </div>
-
-                <!-- Body -->
-                <div class="modal-panel-body">
-                    <slot></slot>
-                </div>
-
             </div>
-        </div>
 
-    </Transition>
+        </Transition>
+    </Teleport>
 </template>
 
 
@@ -65,7 +67,7 @@ const onClickOutside = (e) => {
     justify-content: center;
     align-items: center;
     background-color: rgba($color: #000, $alpha: 0.6);
-    z-index: 1;
+    z-index: 2;
     overflow-y: auto;
 
     &-content {
