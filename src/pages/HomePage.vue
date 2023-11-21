@@ -2,7 +2,6 @@
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
-import AppLoader from '@/components/AppLoader.vue';
 import TheBackTopButton from '@/components/base/TheBackTopButton.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
@@ -10,22 +9,27 @@ import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
 export default {
 
-    components: { ApartmentsList, AppLoader, TheBackTopButton },
+    components: { ApartmentsList, TheBackTopButton },
 
     data: () => ({
         apartmentsPromoted: [],
         apartmentsRandom: [],
-        isLoading: true,
+        rand_seed: null,
         currentPage: 1,
         lastPage: null,
-        cardLoader: false,
-        rand_seed: null,
-        isBackTopVisible: false
+
+        isBackTopVisible: false,
+
+        isLoading: false,
+        scrollThrottling: false
     }),
 
     methods: {
 
         fetchApartments(endpoint = '', successCallback) {
+
+            this.isLoading = true;
+
             apiClient.get('/apartments' + endpoint)
                 .then(successCallback)
                 .catch(err => {
@@ -36,72 +40,97 @@ export default {
                 });
         },
 
-        infiniteScroll() {
-            if ((this.currentPage >= this.lastPage || this.cardLoader)) return;
+        handleScroll() {
 
-            // Height of apartment list (section that you see on the page)
-            const apartmentListHeight = this.$refs.apartmentList.getBoundingClientRect().height;
-            // The pixels that scrolled the apartment list from the top side of the window
-            const apartemntListTopScroll = this.$refs.apartmentList.scrollTop;
-            // Total height of the entire element, visible and invisible
-            const totalHeight = this.$refs.apartmentList.scrollHeight;
-            // How many pixels before the bottom does the call start
-            const tollerance = 10;
+            // Scroll Throttling
+            if (!this.scrollThrottling) {
 
-            if ((apartemntListTopScroll + apartmentListHeight) + tollerance >= totalHeight) {
-                this.currentPage++
+                window.requestAnimationFrame(() => {
 
-                if (!this.cardLoader) {
-                    window.requestAnimationFrame(() => {
-                        this.cardLoader = true;
+                    // Settings
+                    const scrollTollerance = 10;
+                    const backTopVisibilityThreshold = 200;
+
+                    // Element sroll data
+                    const elem = this.$refs.mainContent;
+                    const scrollTop = elem.scrollTop;
+                    const scrollBottom = scrollTop + elem.getBoundingClientRect().height;
+                    const scrollTotalHeight = elem.scrollHeight;
+                    const isBottomReached = (scrollTotalHeight - scrollBottom) <= scrollTollerance;
+
+
+                    // Infinite scroll logic
+                    if (this.currentPage < this.lastPage && isBottomReached && !this.isLoading) {
+
+                        this.currentPage++
 
                         // Call api for another 10 apartments
-                        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => { this.apartmentsRandom.push(...res.data.data) });
+                        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => {
+                            this.apartmentsRandom.push(...res.data.data);
+                        });
+                    }
 
-                        setTimeout(() => {
-                            this.cardLoader = false;
-                        }, 1000)
-                    });
-                }
+
+                    // Back top visibility logic
+                    if (scrollTop >= backTopVisibilityThreshold) this.isBackTopVisible = true;
+                    else this.isBackTopVisible = false;
+
+
+                    this.scrollThrottling = false;
+                });
+
+                this.scrollThrottling = true;
             }
 
-            // Button scroll-top
-            if (apartemntListTopScroll >= 200) this.isBackTopVisible = true;
-            else this.isBackTopVisible = false;
 
         },
 
         backTop() {
-            this.$refs.apartmentList.scrollTop = 0;
+            this.$refs.mainContent.scrollTop = 0;
+        },
+
+        test() {
+            console.log('TEST');
         }
 
     },
     created() {
-        // Set random seed (to avoid duplication)
+
+        // Set random seed (to avoid duplicates)
         this.rand_seed = Math.random();
 
         // Fetch Promoted List
-        this.fetchApartments('/promoted', res => { this.apartmentsPromoted = res.data; });
+        this.fetchApartments('/promoted', res => {
+            this.apartmentsPromoted = res.data;
+        });
 
         // Fetch Random List
-        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => { this.apartmentsRandom = res.data.data; this.lastPage = res.data.last_page });
+        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => {
+            this.apartmentsRandom = res.data.data;
+            this.lastPage = res.data.last_page;
+        });
+    },
+
+    mounted() {
+        this.$refs.mainContent.addEventListener('scroll', this.handleScroll);
+    },
+
+    unmounted() {
+        this.$refs.mainContent.removeEventListener('scroll', this.handleScroll);
     }
 }
 </script>
 
 <template>
-    <main @scroll="infiniteScroll" ref="apartmentList">
+    <main ref="mainContent">
 
         <!-- Promoted Appartments -->
-        <ApartmentsList v-if="!isLoading && apartmentsPromoted.length" :apartments="apartmentsPromoted"
+        <ApartmentsList v-if="apartmentsPromoted.length" :apartments="apartmentsPromoted"
             infoMessage="I boolbnb in evidenza sono consigliati dal nostro team!" title="Boolbnb in evidenza" />
 
         <!-- Random Appartments -->
-        <ApartmentsList v-if="!isLoading" :apartments="apartmentsRandom" title="I nostri boolbnb"
-            infoMessage="I boolbnb vengono mostrati in ordine casuale" :cardLoader="cardLoader" />
-
-        <!-- Loader -->
-        <AppLoader :is-loading="isLoading" :cardLoading="true" />
+        <ApartmentsList :apartments="apartmentsRandom" title="I nostri boolbnb"
+            infoMessage="I boolbnb vengono mostrati in ordine casuale" :isLoading="isLoading" />
 
         <!-- Back-top-button -->
         <TheBackTopButton :isVisible="isBackTopVisible" @@back-top="backTop" />
@@ -109,10 +138,10 @@ export default {
     </main>
 </template>
 
-<style lang="scss">
+<style>
 main {
     position: relative;
+
     scroll-behavior: smooth;
-    overflow-x: hidden;
 }
 </style>
