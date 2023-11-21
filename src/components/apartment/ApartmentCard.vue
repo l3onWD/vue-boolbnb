@@ -1,42 +1,67 @@
-<script>
-export default {
-    props: {
-        apartment: Object
-    },
-    methods: {
-        /**
-        * Get main searched services
-        */
-        mainServices() {
-            const services = this.apartment.services.sort((a, b) => {
-                const firstService = this.filteredServiceIds.includes(a.id.toString()) ? 1 : 0;
-                const secondService = this.filteredServiceIds.includes(b.id.toString()) ? 1 : 0;
-                return secondService - firstService
-            });
-            return services.slice(0, 4);
-        }
-    },
-    computed: {
-
-        /**
-         * Get distance in Km (only Search Page)
-         */
-        distance() {
-            if (!this.apartment.distance === undefined) return '';
-            return Math.ceil(parseInt(this.apartment.distance) / 1000) + ' Km';
-        },
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 
-        /**
-         * Get the list of services filters applyed
-         */
-        filteredServiceIds() {
-            if (!this.$route.query['services[]']) return [];
-            return this.$route.query['services[]'];
-        }
+//*** PROPS ***//
+const props = defineProps({
+    apartment: {
+        type: Object,
+        required: true
     }
-};
+});
+
+
+//*** DATA ***//
+const imagePlaceholderUrl = 'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=';
+const route = useRoute();
+
+
+//*** COMPUTED ***//
+/**
+* Get image url or placeholder url
+*/
+const apartmentImageUrl = computed(() => {
+    if (!props.apartment.image) return imagePlaceholderUrl;
+    return `http://127.0.0.1:8000/storage/${props.apartment.image}`
+});
+
+/**
+ * Get distance in Km (only Search Page)
+ */
+const distance = computed(() => {
+    if (props.apartment.distance === undefined) return '';
+    return Math.ceil(parseInt(props.apartment.distance) / 1000) + ' Km';
+});
+
+/**
+ * Get the list of services filters applyed
+ */
+const filteredServiceIds = computed(() => {
+    if (!route.query['services[]']) return [];
+    return route.query['services[]'];
+});
+
+/**
+* Get main searched services
+*/
+const mainServices = computed(() => {
+
+    // Reorder Services by filtered
+    const services = props.apartment.services.sort((a, b) => {
+
+        const firstService = filteredServiceIds.value.includes(a.id.toString()) ? 1 : 0;
+        const secondService = filteredServiceIds.value.includes(b.id.toString()) ? 1 : 0;
+
+        return secondService - firstService
+    });
+
+    // Return only 4 services
+    return services.slice(0, 4);
+});
+
 </script>
+
 
 <template>
     <div class="card">
@@ -46,13 +71,7 @@ export default {
             <!-- Card Img -->
             <div class="card-img">
 
-                <img v-if="apartment.image" :src="`http://127.0.0.1:8000/storage/${apartment.image}`"
-                    :alt="apartment.title">
-
-                <!-- Placeholder -->
-                <img v-else
-                    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
-                    alt="placeholder">
+                <img :src="apartmentImageUrl" :alt="apartment.title">
 
                 <!-- Promoted Badge -->
                 <div v-if="apartment.promotions_max_apartment_promotionend_date" class="promoted-badge">
@@ -81,8 +100,7 @@ export default {
                 <div v-if="apartment.distance !== undefined" class="services-icon">
                     Servizi principali
                     <ul>
-                        <!-- :class="{ 'order-1': !filteredServiceIds.includes(service.id.toString()) }" -->
-                        <li v-for="service in mainServices()" :key="service.id">
+                        <li v-for="service in mainServices" :key="service.id">
                             <div class="service-icon"
                                 :class="{ 'selected': filteredServiceIds.includes(service.id.toString()) }"
                                 :title="service.name">
@@ -101,8 +119,9 @@ export default {
     </div>
 </template>
 
+
 <style lang="scss" scoped>
-@use '../../assets/scss/vars' as *;
+@use '@/assets/scss/vars' as *;
 
 .card {
     border: none;
@@ -111,11 +130,13 @@ export default {
 
 .card-img {
     position: relative;
+
     aspect-ratio: 1;
     overflow: hidden;
 
     img {
         @include square(100%);
+
         transition: all 0.3s;
         object-fit: cover;
     }
@@ -139,11 +160,12 @@ export default {
 }
 
 .card-content {
+    padding: 10px 0;
+
     @include flex(center, start, column, $gap: 7px);
     color: #717171;
     font-size: 17px;
     font-weight: 300;
-    padding: 10px 0;
     overflow: hidden;
 
     h6,
@@ -158,9 +180,10 @@ export default {
 
         img {
             @include max-size;
+
+            display: block;
             object-fit: contain;
             filter: contrast(0.1);
-            display: block;
 
         }
 
@@ -183,6 +206,7 @@ export default {
 .services-icon {
     @include flex(start, $wrap: nowrap, $gap: 3px);
     max-width: 100%;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
