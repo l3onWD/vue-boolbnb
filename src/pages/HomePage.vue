@@ -7,25 +7,13 @@ import TheBackTopButton from '@/components/base/TheBackTopButton.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
 
-//*** SETTINGS ***//
-const scrollTollerance = 10;
-const backTopVisibilityThreshold = 200;
-
-
-//*** DATA ***//
-const apartmentsPromoted = reactive([]);
-const apartmentsRandom = reactive([]);
-const currentPage = ref(1);
-const lastPage = ref(null);
-
-const isBackTopVisible = ref(false);
-
+//*** GENERAL ***//
+// Data
 const isLoading = ref(false);
-const scrollThrottling = ref(false);
 const mainContent = ref(null);
+const scrollThrottling = ref(false);
 
-
-//*** FUNCTIONS ***//
+// Functions
 const fetchApartments = (endpoint = '', successCallback) => {
 
     isLoading.value = true;
@@ -47,29 +35,12 @@ const handleScroll = () => {
 
         window.requestAnimationFrame(() => {
 
-            // Element sroll data
-            const scrollTop = mainContent.value.scrollTop;
-            const scrollBottom = scrollTop + mainContent.value.getBoundingClientRect().height;
-            const scrollTotalHeight = mainContent.value.scrollHeight;
-
-            const isBottomReached = (scrollTotalHeight - scrollBottom) <= scrollTollerance;
-
-
-            // Infinite scroll logic
-            if (currentPage.value < lastPage.value && isBottomReached && !isLoading.value) {
-
-                currentPage.value++
-
-                // Call api for another 10 apartments
-                fetchApartments(`/random?page=${currentPage.value}&rand_seed=${rand_seed}`, res => {
-                    apartmentsRandom.push(...res.data.data);
-                });
-            }
+            // Random List Infinite Scroll
+            handleInfiniteScroll()
 
 
             // Back top visibility logic
-            if (scrollTop >= backTopVisibilityThreshold) isBackTopVisible.value = true;
-            else isBackTopVisible.value = false;
+            handleBackTopVisibility();
 
 
             scrollThrottling.value = false;
@@ -80,34 +51,82 @@ const handleScroll = () => {
 
 }
 
-const backTop = () => {
-    mainContent.value.scrollTop = 0;
-}
-
-
-
-//*** LOGIC ***//
-// Fetch Promoted List
-fetchApartments('/promoted', res => {
-    apartmentsPromoted.push(...res.data);
-});
-
-// Fetch Random List
-const rand_seed = Math.random();
-fetchApartments(`/random?page=${currentPage}&rand_seed=${rand_seed}`, res => {
-    apartmentsRandom.push(...res.data.data);
-    lastPage.value = res.data.last_page;
-});
-
+// Lifehooks
 onMounted(() => {
     mainContent.value.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
     mainContent.value.removeEventListener('scroll', handleScroll);
-})
+});
+
+
+
+//*** PROMOTED APARTMENTS ***//
+// Data
+const apartmentsPromoted = reactive([]);
+
+// Fetch Promoted List
+fetchApartments('/promoted', res => {
+    apartmentsPromoted.push(...res.data);
+});
+
+
+
+//*** RANDOM APARTMENTS ***//
+// Data
+const rand_seed = Math.random();
+const apartmentsRandom = reactive([]);
+const currentRandomPage = ref(1);
+const lastRandomPage = ref(null);
+const scrollTollerance = 10;
+
+// Functions
+const handleInfiniteScroll = () => {
+    const scrollTop = mainContent.value.scrollTop;
+    const scrollBottom = scrollTop + mainContent.value.getBoundingClientRect().height;
+    const scrollTotalHeight = mainContent.value.scrollHeight;
+
+    const isBottomReached = (scrollTotalHeight - scrollBottom) <= scrollTollerance;
+
+
+    // Infinite scroll logic
+    if (currentRandomPage.value < lastRandomPage.value && isBottomReached && !isLoading.value) {
+
+        currentRandomPage.value++
+
+        // Call api for another 10 apartments
+        fetchApartments(`/random?page=${currentRandomPage.value}&rand_seed=${rand_seed}`, res => {
+            apartmentsRandom.push(...res.data.data);
+        });
+    }
+}
+
+// Fetch Random List
+fetchApartments(`/random?page=${currentRandomPage}&rand_seed=${rand_seed}`, res => {
+    apartmentsRandom.push(...res.data.data);
+    lastRandomPage.value = res.data.last_page;
+});
+
+
+
+//*** BACK TOP BUTTON ***//
+// Data
+const backTopVisibilityThreshold = 200;
+const isBackTopVisible = ref(false);
+
+// Functions
+const handleBackTopVisibility = () => {
+    if (mainContent.value.scrollTop >= backTopVisibilityThreshold) isBackTopVisible.value = true;
+    else isBackTopVisible.value = false;
+}
+
+const backTop = () => {
+    mainContent.value.scrollTop = 0;
+}
 
 </script>
+
 
 <template>
     <main ref="mainContent">
@@ -125,6 +144,7 @@ onUnmounted(() => {
 
     </main>
 </template>
+
 
 <style>
 main {
