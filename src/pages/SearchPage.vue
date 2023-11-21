@@ -1,65 +1,66 @@
-<script>
-import AppLoader from '@/components/AppLoader.vue';
+<script setup>
+import { computed, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { apiClient } from '@/http/';
+
+//*** COMPONENTS ***//
 import FiltersBar from '@/components/filters/FiltersBar.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
-import { apiClient } from '@/http/';
+
+//*** DATA ***//
+const apartments = reactive([]);
+const address = ref('');
+const errorMessage = ref('');
+const isLoading = ref(true);
+const route = useRoute();
 
 
-export default {
-    components: { FiltersBar, ApartmentsList, AppLoader },
+//*** COMPUTED ***//
+const routeQuery = computed(() => route.query);
 
-    data: () => ({
-        apartments: [],
-        isLoading: true,
-        errorMessage: '',
-        address: ''
-    }),
 
-    watch: {
-        '$route.query': {
-            handler(newQuery) {
-                this.fetchApartments();
+//*** FUNCTIONS ***//
+const fetchApartments = () => {
+
+    isLoading.value = true;
+    errorMessage.value = '';
+    apartments.splice(0, apartments.length);
+    console.log(apartments);
+
+    // Get query
+    const params = route.query;
+    address.value = route.query.address
+
+
+    // Call API
+    apiClient.get('apartments/filter', { params })
+        .then(res => {
+            apartments.push(...res.data);
+        })
+        .catch(err => {
+            console.error(err.response.data);
+            const status = err.response.status;
+
+            if (status === 400) {
+                errorMessage.value = 'Inserisci un indirizzo valido.';
+            } else {
+                errorMessage.value = `Errore ${status}`;
             }
-        }
-    },
-
-    methods: {
-        fetchApartments() {
-
-            this.isLoading = true;
-            this.errorMessage = '';
-
-            // Get query
-            const params = this.$route.query;
-            this.address = this.$route.query.address
-
-
-            // Call API
-            apiClient.get('apartments/filter', { params })
-                .then(res => {
-                    this.apartments = res.data;
-                })
-                .catch(err => {
-                    console.error(err.response.data);
-                    const status = err.response.status;
-
-                    if (status === 400) {
-                        this.errorMessage = 'Inserisci un indirizzo valido.';
-                    } else {
-                        this.errorMessage = `Errore ${status}`;
-                    }
-                })
-                .then(() => {
-                    this.isLoading = false;
-                });
-        }
-    },
-    created() {
-        this.fetchApartments();
-    }
+        })
+        .then(() => {
+            isLoading.value = false;
+        });
 }
+
+
+//*** WATCHERS ***//
+watch(routeQuery, () => {
+    fetchApartments();
+}, { immediate: true });
+
 </script>
+
 
 <template>
     <main>
@@ -70,22 +71,20 @@ export default {
         </div>
 
         <!-- Page Cotent -->
-        <div v-if="!isLoading">
+        <div class="container">
 
             <!-- Error Message -->
-            <div v-if="errorMessage" class="container">
-                <h4 class="text-danger text-center mt-5">{{ errorMessage }}</h4>
+            <div v-if="!isLoading && errorMessage" class="mt-5">
+                <h4 class="text-danger text-center">{{ errorMessage }}</h4>
             </div>
 
             <!-- Apartments -->
-            <ApartmentsList v-else :apartments="apartments" :title="`Risultati in questa località: ${address}`"
-                infoMessage="Vengono visualizzati per primi i boolbnb consigliati dal nostro team" />
+            <ApartmentsList :apartments="apartments" :title="`Risultati in questa località: ${address}`"
+                infoMessage="Vengono visualizzati per primi i boolbnb consigliati dal nostro team" :isLoading="isLoading" />
         </div>
     </main>
-
-    <!-- Loader -->
-    <AppLoader :is-loading="isLoading" />
 </template>
+
 
 <style scoped>
 .filters-bar-container {
