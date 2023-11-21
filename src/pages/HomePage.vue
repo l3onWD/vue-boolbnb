@@ -131,13 +131,16 @@ const backTop = () => {
 <template>
     <main ref="mainContent">
 
-        <!-- Promoted Appartments -->
-        <ApartmentsList v-if="apartmentsPromoted.length" :apartments="apartmentsPromoted"
-            infoMessage="I boolbnb in evidenza sono consigliati dal nostro team!" title="Boolbnb in evidenza" />
+        <div class="container">
 
-        <!-- Random Appartments -->
-        <ApartmentsList :apartments="apartmentsRandom" title="I nostri boolbnb"
-            infoMessage="I boolbnb vengono mostrati in ordine casuale" :isLoading="isLoading" />
+            <!-- Promoted Appartments -->
+            <ApartmentsList v-if="apartmentsPromoted.length" :apartments="apartmentsPromoted"
+                infoMessage="I boolbnb in evidenza sono consigliati dal nostro team!" title="Boolbnb in evidenza" />
+
+            <!-- Random Appartments -->
+            <ApartmentsList :apartments="apartmentsRandom" title="I nostri boolbnb"
+                infoMessage="I boolbnb vengono mostrati in ordine casuale" :isLoading="isLoading" />
+        </div>
 
         <!-- Back-top-button -->
         <TheBackTopButton :isVisible="isBackTopVisible" @@back-top="backTop" />

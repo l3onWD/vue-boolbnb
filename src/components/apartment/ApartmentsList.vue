@@ -1,4 +1,5 @@
-<script>
+<script setup>
+import { computed } from 'vue';
 
 //*** COMPONENTS ***//
 import ApartmentCard from '@/components/apartment/ApartmentCard.vue';
@@ -6,28 +7,38 @@ import HeaderPlaceholder from '@/components/placeholders/HeaderPlaceholder.vue';
 import CardPlaceholder from '@/components/placeholders/CardPlaceholder.vue';
 
 
-export default {
-    props: {
-        apartments: Array,
-        title: String,
-        infoMessage: String,
-        isLoading: Boolean
+//*** PROPS ***//
+const props = defineProps({
+    apartments: {
+        type: Array,
+        default: []
     },
-
-    components: { ApartmentCard, HeaderPlaceholder, CardPlaceholder },
-
-    computed: {
-
-        placeholdersCount() {
-            return this.isLoading ? 10 : 0;
-        }
+    title: {
+        type: String,
+        default: ''
+    },
+    infoMessage: {
+        type: String,
+        default: ''
+    },
+    isLoading: {
+        type: Boolean,
+        default: false
     }
-}
+});
+
+
+//*** CARD PLACEHOLDERS ***//
+// Placeholder Total Amount
+const placeholdersCount = computed(() => {
+    return props.isLoading ? 10 : 0;
+});
+
 </script>
 
 
 <template>
-    <div class="container">
+    <div class="my-4">
 
         <!-- List Header -->
         <div v-if="!isLoading">
@@ -68,7 +79,7 @@ export default {
         </div>
 
         <!-- Empty List -->
-        <h4 v-if="!apartments.length" class="text-center mt-5">Nessun risultato</h4>
+        <h4 v-if="!isLoading && !apartments.length" class="text-center mt-5">Nessun risultato</h4>
 
     </div>
 </template>
@@ -77,9 +88,6 @@ export default {
 <style lang="scss" scoped>
 @use '@/assets/scss/vars' as *;
 
-.container {
-    margin: 20px auto;
-}
 
 h6 {
     font-size: 12px;
@@ -89,6 +97,7 @@ h6 {
 
 .button-info {
     @include circle(15px);
+
     @include flex;
     border: 2px solid#717171;
     color: #717171;
