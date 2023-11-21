@@ -26,7 +26,6 @@ const fetchApartments = () => {
     isLoading.value = true;
     errorMessage.value = '';
     apartments.splice(0, apartments.length);
-    console.log(apartments);
 
     // Get query
     const params = route.query;
