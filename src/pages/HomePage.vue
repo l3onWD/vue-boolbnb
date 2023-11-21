@@ -1,4 +1,5 @@
-<script>
+<script setup>
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
@@ -6,119 +7,106 @@ import TheBackTopButton from '@/components/base/TheBackTopButton.vue';
 import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
 
 
+//*** SETTINGS ***//
+const scrollTollerance = 10;
+const backTopVisibilityThreshold = 200;
 
-export default {
 
-    components: { ApartmentsList, TheBackTopButton },
+//*** DATA ***//
+const apartmentsPromoted = reactive([]);
+const apartmentsRandom = reactive([]);
+const currentPage = ref(1);
+const lastPage = ref(null);
 
-    data: () => ({
-        apartmentsPromoted: [],
-        apartmentsRandom: [],
-        rand_seed: null,
-        currentPage: 1,
-        lastPage: null,
+const isBackTopVisible = ref(false);
 
-        isBackTopVisible: false,
+const isLoading = ref(false);
+const scrollThrottling = ref(false);
+const mainContent = ref(null);
 
-        isLoading: false,
-        scrollThrottling: false
-    }),
 
-    methods: {
+//*** FUNCTIONS ***//
+const fetchApartments = (endpoint = '', successCallback) => {
 
-        fetchApartments(endpoint = '', successCallback) {
+    isLoading.value = true;
 
-            this.isLoading = true;
+    apiClient.get('/apartments' + endpoint)
+        .then(successCallback)
+        .catch(err => {
+            console.error(err);
+        })
+        .then(() => {
+            isLoading.value = false;
+        });
+}
 
-            apiClient.get('/apartments' + endpoint)
-                .then(successCallback)
-                .catch(err => {
-                    console.error(err);
-                })
-                .then(() => {
-                    this.isLoading = false;
+const handleScroll = () => {
+
+    // Scroll Throttling
+    if (!scrollThrottling.value) {
+
+        window.requestAnimationFrame(() => {
+
+            // Element sroll data
+            const scrollTop = mainContent.value.scrollTop;
+            const scrollBottom = scrollTop + mainContent.value.getBoundingClientRect().height;
+            const scrollTotalHeight = mainContent.value.scrollHeight;
+
+            const isBottomReached = (scrollTotalHeight - scrollBottom) <= scrollTollerance;
+
+
+            // Infinite scroll logic
+            if (currentPage.value < lastPage.value && isBottomReached && !isLoading.value) {
+
+                currentPage.value++
+
+                // Call api for another 10 apartments
+                fetchApartments(`/random?page=${currentPage.value}&rand_seed=${rand_seed}`, res => {
+                    apartmentsRandom.push(...res.data.data);
                 });
-        },
-
-        handleScroll() {
-
-            // Scroll Throttling
-            if (!this.scrollThrottling) {
-
-                window.requestAnimationFrame(() => {
-
-                    // Settings
-                    const scrollTollerance = 10;
-                    const backTopVisibilityThreshold = 200;
-
-                    // Element sroll data
-                    const elem = this.$refs.mainContent;
-                    const scrollTop = elem.scrollTop;
-                    const scrollBottom = scrollTop + elem.getBoundingClientRect().height;
-                    const scrollTotalHeight = elem.scrollHeight;
-                    const isBottomReached = (scrollTotalHeight - scrollBottom) <= scrollTollerance;
-
-
-                    // Infinite scroll logic
-                    if (this.currentPage < this.lastPage && isBottomReached && !this.isLoading) {
-
-                        this.currentPage++
-
-                        // Call api for another 10 apartments
-                        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => {
-                            this.apartmentsRandom.push(...res.data.data);
-                        });
-                    }
-
-
-                    // Back top visibility logic
-                    if (scrollTop >= backTopVisibilityThreshold) this.isBackTopVisible = true;
-                    else this.isBackTopVisible = false;
-
-
-                    this.scrollThrottling = false;
-                });
-
-                this.scrollThrottling = true;
             }
 
 
-        },
+            // Back top visibility logic
+            if (scrollTop >= backTopVisibilityThreshold) isBackTopVisible.value = true;
+            else isBackTopVisible.value = false;
 
-        backTop() {
-            this.$refs.mainContent.scrollTop = 0;
-        },
 
-        test() {
-            console.log('TEST');
-        }
-
-    },
-    created() {
-
-        // Set random seed (to avoid duplicates)
-        this.rand_seed = Math.random();
-
-        // Fetch Promoted List
-        this.fetchApartments('/promoted', res => {
-            this.apartmentsPromoted = res.data;
+            scrollThrottling.value = false;
         });
 
-        // Fetch Random List
-        this.fetchApartments(`/random?page=${this.currentPage}&rand_seed=${this.rand_seed}`, res => {
-            this.apartmentsRandom = res.data.data;
-            this.lastPage = res.data.last_page;
-        });
-    },
-
-    mounted() {
-        this.$refs.mainContent.addEventListener('scroll', this.handleScroll);
-    },
-
-    unmounted() {
-        this.$refs.mainContent.removeEventListener('scroll', this.handleScroll);
+        scrollThrottling.value = true;
     }
+
 }
+
+const backTop = () => {
+    mainContent.value.scrollTop = 0;
+}
+
+
+
+//*** LOGIC ***//
+// Fetch Promoted List
+fetchApartments('/promoted', res => {
+    apartmentsPromoted.push(...res.data);
+});
+
+// Fetch Random List
+const rand_seed = Math.random();
+fetchApartments(`/random?page=${currentPage}&rand_seed=${rand_seed}`, res => {
+    apartmentsRandom.push(...res.data.data);
+    lastPage.value = res.data.last_page;
+});
+
+onMounted(() => {
+    mainContent.value.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+    mainContent.value.removeEventListener('scroll', handleScroll);
+})
+
 </script>
 
 <template>
