@@ -1,12 +1,17 @@
 <script>
-import AppLoader from '../components/AppLoader.vue';
-import ApartmentsList from '../components/apartment/ApartmentsList.vue';
-
 import { apiClient } from '@/http/';
+
+//*** COMPONENTS ***//
+import AppLoader from '@/components/AppLoader.vue';
+import TheBackTopButton from '@/components/base/TheBackTopButton.vue';
+import ApartmentsList from '@/components/apartment/ApartmentsList.vue';
+
 
 
 export default {
-    components: { ApartmentsList, AppLoader },
+
+    components: { ApartmentsList, AppLoader, TheBackTopButton },
+
     data: () => ({
         apartmentsPromoted: [],
         apartmentsRandom: [],
@@ -15,8 +20,11 @@ export default {
         lastPage: null,
         cardLoader: false,
         rand_seed: null,
+        isBackTopVisible: false
     }),
+
     methods: {
+
         fetchApartments(endpoint = '', successCallback) {
             apiClient.get('/apartments' + endpoint)
                 .then(successCallback)
@@ -27,6 +35,7 @@ export default {
                     this.isLoading = false;
                 });
         },
+
         infiniteScroll() {
             if ((this.currentPage >= this.lastPage || this.cardLoader)) return;
 
@@ -57,13 +66,11 @@ export default {
             }
 
             // Button scroll-top
-            if (apartemntListTopScroll >= 200) {
-                this.$refs.topButton.classList.add('show');
-            } else {
-                this.$refs.topButton.classList.remove('show')
-            }
+            if (apartemntListTopScroll >= 200) this.isBackTopVisible = true;
+            else this.isBackTopVisible = false;
 
         },
+
         backTop() {
             this.$refs.apartmentList.scrollTop = 0;
         }
@@ -97,9 +104,8 @@ export default {
         <AppLoader :is-loading="isLoading" :cardLoading="true" />
 
         <!-- Back-top-button -->
-        <button ref="topButton" class="back-top circle-button" @click="backTop()">
-            <FontAwesomeIcon icon="angles-up" />
-        </button>
+        <TheBackTopButton :isVisible="isBackTopVisible" @@back-top="backTop" />
+
     </main>
 </template>
 
@@ -108,19 +114,5 @@ main {
     position: relative;
     scroll-behavior: smooth;
     overflow-x: hidden;
-}
-
-.back-top {
-    position: fixed;
-    inset: auto 11px 60px auto;
-    background-color: white;
-    scale: 0.1;
-    opacity: 0;
-    transition: all .2s linear;
-
-    &.show {
-        opacity: 1;
-        scale: 1;
-    }
 }
 </style>
