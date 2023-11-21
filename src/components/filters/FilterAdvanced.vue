@@ -17,7 +17,7 @@ const fetchServices = () => {
 
     apiClient.get('/services')
         .then(({ data }) => {
-            servicesList.splice(-1);
+            servicesList.splice(0, servicesList.length);
             servicesList.push(...data);
         })
         .catch(err => {
