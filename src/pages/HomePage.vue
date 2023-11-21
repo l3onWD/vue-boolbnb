@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onBeforeUnmount, reactive, ref } from 'vue';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
@@ -56,7 +56,7 @@ onMounted(() => {
     mainContent.value.addEventListener('scroll', handleScroll);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     mainContent.value.removeEventListener('scroll', handleScroll);
 });
 
