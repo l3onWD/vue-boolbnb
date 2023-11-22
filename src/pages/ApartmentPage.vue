@@ -6,12 +6,13 @@ import AppLoader from '@/components/AppLoader.vue';
 import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
 import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSection.vue';
 import ApartmentHostSection from '@/components/apartment/detail/ApartmentHostSection.vue';
+import ApartmentDescriptionSection from '@/components/apartment/detail/ApartmentDescriptionSection.vue';
 import ApartmentMapSection from '@/components/apartment/detail/ApartmentMapSection.vue';
 
 
 export default {
 
-    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection, ApartmentMapSection },
+    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection, ApartmentMapSection, ApartmentDescriptionSection },
 
     data() {
         return {
@@ -169,10 +170,7 @@ export default {
                 <!-- Description -->
                 <hr>
 
-                <div class="py-4">
-                    <h3 class="mb-2">Descrizione</h3>
-                    <p>{{ apartment.description }}</p>
-                </div>
+                <ApartmentDescriptionSection :description="apartment.description" />
 
 
                 <!-- Services -->
