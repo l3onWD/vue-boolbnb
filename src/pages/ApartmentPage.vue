@@ -8,11 +8,12 @@ import '@tomtom-international/web-sdk-maps/dist/maps.css';
 import AppLoader from '@/components/AppLoader.vue';
 import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
 import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSection.vue';
+import ApartmentHostSection from '@/components/apartment/detail/ApartmentHostSection.vue';
 
 
 export default {
 
-    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection },
+    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection },
 
     data() {
         return {
@@ -88,12 +89,6 @@ export default {
                 this.errors.email = 'La mail inserita non è valida'
             }
         },
-
-        // Get First letter of a string
-        getFirstLetter: (word) => (word.substring(0, 1).toUpperCase()),
-
-        // Capitalize a string
-        capitalizeString: (word) => (word.charAt(0).toUpperCase() + word.slice(1)),
 
         // // TomTom Map
         getMap() {
@@ -188,24 +183,15 @@ export default {
                 <ApartmentInfoSection :address="apartment.address" :rooms="apartment.rooms" :beds="apartment.beds"
                     :bathrooms="apartment.bathrooms" />
 
+                <!-- Host information -->
+                <hr v-if="apartment.user.name">
+
+                <ApartmentHostSection v-if="apartment.user.name" :hostName="apartment.user.name" />
+
+
                 <!-- Information -->
                 <section id="apartments-details">
 
-
-                    <!-- Host information -->
-                    <hr v-if="apartment.user.name">
-
-                    <div v-if="apartment.user.name" class="d-flex align-items-center justify-content-between">
-
-                        <div class="d-flex align-items-center gap-4">
-                            <div class="user">{{ getFirstLetter(apartment.user.name) }}</div>
-                            <h3>Nome dell'host: {{ capitalizeString(apartment.user.name) }}</h3>
-                        </div>
-
-                        <a href="#message-form" class="button button-light">
-                            Contatta {{ capitalizeString(apartment.user.name) }}
-                        </a>
-                    </div>
 
                     <!-- Description -->
                     <hr>
@@ -447,15 +433,6 @@ ul {
     display: flex;
     gap: 20px;
     font-size: 16px;
-}
-
-// Host information
-.user {
-    @include circle(calc(40px + 2vw));
-    @include flex;
-    font-size: calc(10px + 2vw);
-    color: white;
-    background-color: black;
 }
 
 // _____________SERVICES
