@@ -4,14 +4,14 @@ import { apiClient } from '@/http/';
 import tt from "@tomtom-international/web-sdk-maps";
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
 
-
 //*** COMPONENTS ***//
-import AppLoader from '../components/AppLoader.vue';
-
+import AppLoader from '@/components/AppLoader.vue';
 
 
 export default {
+
     components: { AppLoader },
+
     data() {
         return {
             apartment: '',
@@ -27,11 +27,14 @@ export default {
             loadingMessage: false
         }
     },
+
     methods: {
         // Get all services
         fetchServices() {
-            apiClient.get('/services').then(res => { this.services = res.data })
+            apiClient.get('/services')
+                .then(res => { this.services = res.data });
         },
+
         // Get apartment details
         getApartment() {
             apiClient.get('/apartments/' + this.$route.params.id)
@@ -39,6 +42,7 @@ export default {
                 .catch(() => { this.$router.push({ name: 'not-found', query: { error: 404 } }) })
                 .then(() => { this.isLoading = false; });
         },
+
         // Send a message to the host
         sendMessage() {
             // Validation
@@ -71,6 +75,7 @@ export default {
                     .then(() => { this.loadingMessage = false })
             }
         },
+
         validation() {
             this.errors = {};
             if (!this.form.name) { this.errors.name = 'Il nome è obbligatorio' }
@@ -81,10 +86,13 @@ export default {
                 this.errors.email = 'La mail inserita non è valida'
             }
         },
+
         // Get First letter of a string
         getFirstLetter: (word) => (word.substring(0, 1).toUpperCase()),
+
         // Capitalize a string
         capitalizeString: (word) => (word.charAt(0).toUpperCase() + word.slice(1)),
+
         // // TomTom Map
         getMap() {
             if (this.apartment.address) {
@@ -101,6 +109,7 @@ export default {
                 const marker = new tt.Marker().setLngLat([lon, lat]).addTo(map);
             }
         },
+
         // Services not available in the apartment
         serviceNotAvailable() {
             // Services of the apartament (Available Services)
@@ -113,6 +122,7 @@ export default {
             return this.services.filter(s => !avServId.includes(s.id));
 
         },
+
         getServiceClass() {
             if (this.apartment.services.length <= 5) {
                 return 'services-small'
@@ -122,20 +132,24 @@ export default {
                 return 'services-large'
             }
         },
+
         isEmpty(obj) {
             return Object.entries(obj).length
         },
 
     },
+
     created() {
         this.getApartment();
         this.fetchServices();
     },
+
     mounted() {
         setTimeout(() => {
             this.getMap();
         }, 2000);
     },
+
     computed: {
         hasErrors() {
             return Object.entries(this.errors).length
@@ -144,30 +158,36 @@ export default {
 }
 </script>
 
+
 <template>
     <main>
-        <div v-if="!isLoading">
+
+        <div v-if="!isLoading" class="container">
+
             <!-- Header -->
-            <header>
-                <div class="container">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h2>{{ apartment.title }}</h2>
-                        <div class="circle-button">
-                            <button @click="$router.back()">
-                                <FontAwesomeIcon :icon="['fas', 'chevron-left']" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <header class="d-flex align-items-center justify-content-between py-4">
+
+                <h2>{{ apartment.title }}</h2>
+
+                <button class="circle-button" @click="$router.back()">
+                    <FontAwesomeIcon :icon="['fas', 'chevron-left']" />
+                </button>
+
             </header>
 
-            <div class="container">
+
+            <!-- Page Content -->
+            <div>
+
                 <!-- Image -->
                 <div class="slider">
+
                     <div></div>
+
                     <div v-if="apartment.image" class="image-container">
                         <img :src="`http://127.0.0.1:8000/storage/${apartment.image}`" :alt="apartment.title">
                     </div>
+
                     <!-- Without image -->
                     <div v-else class="no-image">
                         <div class="icon">
@@ -178,11 +198,15 @@ export default {
                             <FontAwesomeIcon :icon="['fas', 'arrow-down']" bounce size="2xl" />
                         </a>
                     </div>
+
                     <div></div>
+
                 </div>
+
 
                 <!-- Information -->
                 <section id="apartments-details">
+
                     <div>
                         <!-- Address -->
                         <h3 class="mb-2">{{ apartment.address }}</h3>
@@ -195,29 +219,39 @@ export default {
                             <li>{{ apartment.bathrooms + ' ' + (apartment.bathrooms == 1 ? 'bagno' : 'bagni') }}</li>
                         </ul>
                     </div>
+
                     <!-- Host information -->
                     <hr v-if="apartment.user.name">
+
                     <div v-if="apartment.user.name" class="d-flex align-items-center justify-content-between">
+
                         <div class="d-flex align-items-center gap-4">
                             <div class="user">{{ getFirstLetter(apartment.user.name) }}</div>
                             <h3>Nome dell'host: {{ capitalizeString(apartment.user.name) }}</h3>
                         </div>
 
-                        <a href="#message-form" class="button button-light">Contatta {{
-                            capitalizeString(apartment.user.name)
-                        }}</a>
+                        <a href="#message-form" class="button button-light">
+                            Contatta {{ capitalizeString(apartment.user.name) }}
+                        </a>
                     </div>
-                    <hr>
+
                     <!-- Description -->
+                    <hr>
+
                     <div>
                         <h3 class="mb-2">Descrizione</h3>
                         <p>{{ apartment.description }}</p>
                     </div>
-                    <hr>
+
                     <!-- Services -->
+                    <hr>
+
                     <div :id="getServiceClass()">
+
                         <h3 class="mb-3">Cosa troverai</h3>
+
                         <div>
+
                             <ul class="service-list onPage">
                                 <li v-for="service in apartment.services">
                                     <div><img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
@@ -225,27 +259,36 @@ export default {
                                     <span>{{ service.name }}</span>
                                 </li>
                             </ul>
+
                             <div class="service-all">
+
                                 <h2>Scopri tutti i servizi</h2>
+
                                 <div>
                                     <!-- Modal Button -->
                                     <button type="button" class="services-button button button-light" data-bs-toggle="modal"
                                         data-bs-target="#serviceModal">Mostra tutti i {{ services.length }}
                                         servizi </button>
                                 </div>
+
                             </div>
 
                             <!-- Service modal -->
                             <div class="modal fade modal-lg" id="serviceModal" tabindex="-1"
                                 aria-labelledby="serviceModalLabel" aria-hidden="true">
+
                                 <div class="modal-dialog">
                                     <div class="modal-content">
+
                                         <div class="modal-header">
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
+
                                         <div class="modal-body">
+
                                             <h3 class="mb-3">Cosa troverai</h3>
+
                                             <ul class="service-list modal-services">
                                                 <li v-for="service in apartment.services">
                                                     <div><img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
@@ -253,33 +296,51 @@ export default {
                                                     <span>{{ service.name }}</span>
                                                 </li>
                                             </ul>
+
                                             <div v-if="serviceNotAvailable().length">
+
                                                 <h3 class="mt-5 mb-3">Non incluso</h3>
+
                                                 <ul class="service-list modal-services">
                                                     <li v-for="service in serviceNotAvailable()">
-                                                        <div><img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
-                                                                :alt="service.name"></div>
+                                                        <div>
+                                                            <img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
+                                                                :alt="service.name">
+                                                        </div>
                                                         <span class="text-decoration-line-through">{{ service.name }}</span>
                                                     </li>
                                                 </ul>
+
                                             </div>
+
                                         </div>
+
                                     </div>
+
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
+
+
                     <!-- Map -->
                     <hr v-if="apartment.address">
+
                     <div v-if="apartment.address">
                         <h3 class="mb-3">Dove ti troverai</h3>
                         <div id="map" :data-latitude="apartment.latitude" :data-longitude="apartment.longitude"
                             style="height:480px"></div>
                         <div class="mt-2 fw-">{{ apartment.address }}</div>
                     </div>
-                    <hr>
+
+
                     <!-- Messages -->
+                    <hr>
+
                     <section id="message-form">
+
                         <h3 class="mb-3">Hai domande? Invia un messaggio all'host</h3>
 
                         <!-- Form -->
@@ -384,31 +445,31 @@ export default {
                     </section>
                 </section>
             </div>
+
         </div>
+
     </main>
+
 
     <!-- Loader -->
     <AppLoader :is-loading="isLoading" />
 </template>
 
-<style lang="scss" scoped>
-@use '../assets/scss/vars' as *;
 
-//_______ HEADER
-header {
-    padding: 24px 0;
-}
+<style lang="scss" scoped>
+@use '@/assets/scss/vars' as *;
 
 // Apartment image
 .slider {
     display: flex;
+
+    div:empty {
+        background-color: $light-grey;
+        flex-grow: 1;
+        border-radius: 20px;
+    }
 }
 
-.slider div:empty {
-    background-color: $light-grey;
-    flex-grow: 1;
-    border-radius: 20px;
-}
 
 // If there is
 .image-container {
