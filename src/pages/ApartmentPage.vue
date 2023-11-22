@@ -7,11 +7,12 @@ import '@tomtom-international/web-sdk-maps/dist/maps.css';
 //*** COMPONENTS ***//
 import AppLoader from '@/components/AppLoader.vue';
 import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
+import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSection.vue';
 
 
 export default {
 
-    components: { AppLoader, ApartmentImageSection },
+    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection },
 
     data() {
         return {
@@ -181,25 +182,15 @@ export default {
             <div>
 
                 <!-- Image -->
-                <ApartmentImageSection :image-file="apartment?.image" :image-title="apartment?.title" />
+                <ApartmentImageSection :image-file="apartment.image" :image-title="apartment.title" />
 
+                <!-- Info -->
+                <ApartmentInfoSection :address="apartment.address" :rooms="apartment.rooms" :beds="apartment.beds"
+                    :bathrooms="apartment.bathrooms" />
 
                 <!-- Information -->
                 <section id="apartments-details">
 
-                    <div>
-                        <!-- Address -->
-                        <h3 class="mb-2">{{ apartment.address }}</h3>
-
-                        <!-- Rooms -->
-                        <ul>
-                            <li>{{ apartment.rooms + ' ' + (apartment.rooms == 1 ? 'camera' : 'camere') }}</li>
-                            <span>-</span>
-                            <li>{{ apartment.beds + ' ' + (apartment.beds == 1 ? 'letto' : 'letti') }}</li>
-                            <span>-</span>
-                            <li>{{ apartment.bathrooms + ' ' + (apartment.bathrooms == 1 ? 'bagno' : 'bagni') }}</li>
-                        </ul>
-                    </div>
 
                     <!-- Host information -->
                     <hr v-if="apartment.user.name">
