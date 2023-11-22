@@ -1,10 +1,13 @@
 <script>
-import AppLoader from '../components/AppLoader.vue';
-
 import { apiClient } from '@/http/';
 // TomTom Map
 import tt from "@tomtom-international/web-sdk-maps";
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
+
+
+//*** COMPONENTS ***//
+import AppLoader from '../components/AppLoader.vue';
+
 
 
 export default {
@@ -281,34 +284,56 @@ export default {
 
                         <!-- Form -->
                         <form class="form-floating needs-validation" @submit.prevent="sendMessage" novalidate>
+
                             <!-- Name -->
                             <div class="mb-4">
-                                <label for="name" class="form-label">Inserisci il tuo nome <span
-                                        class="form-text text-danger fs-5">*</span></label>
+
+                                <label for="name" class="form-label">
+                                    Inserisci il tuo nome
+                                    <span class="form-text text-danger fs-5">*</span>
+                                </label>
+
                                 <input type="text" class="form-control" :class="{ 'is-invalid': errors.name }" id="name"
-                                    v-model.trim="form.name" required>
+                                    v-model.trim="form.name" autocomplete="name" required>
+
                                 <span v-if="errors.name" class="invalid-feedback" role="alert">{{ errors.name }}</span>
+
                                 <span id="title-error" class="text-danger"></span>
 
                             </div>
+
                             <!-- Email -->
                             <div class="mb-4">
-                                <label for="email" class="form-label" required>Inserisci la tua email <span
-                                        class="form-text text-danger fs-5">*</span></label>
+
+                                <label for="email" class="form-label">
+                                    Inserisci la tua email
+                                    <span class="form-text text-danger fs-5">*</span>
+                                </label>
+
                                 <input type="email" class="form-control" :class="{ 'is-invalid': errors.email }" id="email"
-                                    placeholder="nome@esempio.com" v-model.trim="form.email">
+                                    placeholder="nome@esempio.com" v-model.trim="form.email" autocomplete="email" required>
+
                                 <span v-if="errors.email" class="invalid-feedback" role="alert">{{ errors.email }}</span>
+
                             </div>
+
                             <!-- Content -->
                             <div class="mb-2">
-                                <label for="exampleFormControlTextarea1" class="form-label">Contenuto del messaggio <span
-                                        class="form-text text-danger fs-5">*</span></label>
+
+                                <label for="floatingTextarea" class="form-label">
+                                    Contenuto del messaggio
+                                    <span class="form-text text-danger fs-5">*</span>
+                                </label>
+
                                 <textarea class="form-control" :class="{ 'is-invalid': errors.content }"
                                     placeholder="Scrivi un messaggio" id="floatingTextarea" style="height: 160px;"
                                     v-model.trim="form.content" required></textarea>
+
                                 <span v-if="errors.content" class="invalid-feedback" role="alert">{{ errors.content
                                 }}</span>
+
                             </div>
+
                             <div class="dropdown mb-3">
                                 <button class="button-info" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <FontAwesomeIcon :icon="['fas', 'question']" size="xs" />
@@ -320,31 +345,40 @@ export default {
 
                             <!-- Send form -->
                             <div class="d-flex align-items-center gap-4">
+
                                 <button type="submit" class="button button-light">Invia messaggio</button>
+
                                 <!-- Small loader -->
                                 <div v-if="loadingMessage">
-                                    <div class="spinner-border" role="status">
-                                    </div>
+                                    <div class="spinner-border" role="status"></div>
                                 </div>
+
                                 <!-- Alert success -->
                                 <div v-if="successMessage" class="alert alert-success alert-dismissible fade show"
                                     role="alert">
-                                    <strong>{{ successMessage }}
+
+                                    <strong>
+                                        {{ successMessage }}
                                         <FontAwesomeIcon :icon="['fas', 'thumbs-up']" bounce size="lg" />
                                     </strong>
+
                                     <button type="button" class="button-close" data-bs-dismiss="alert" aria-label="Close">
                                         <FontAwesomeIcon :icon="['fas', 'x']" />
                                     </button>
+
                                 </div>
 
                                 <!-- Alert error -->
                                 <div v-if="isEmpty(errors)" class="alert alert-danger alert-dismissible fade show"
                                     role="alert">
+
                                     <strong>Si è verificato un errore!</strong>
+
                                     <button type="button" class="button-close" data-bs-dismiss="alert" aria-label="Close">
                                         <FontAwesomeIcon :icon="['fas', 'x']" />
                                     </button>
                                 </div>
+
                             </div>
                         </form>
                     </section>
@@ -613,4 +647,5 @@ ul {
     .no-image {
         margin: 0;
     }
-}</style>
+}
+</style>
