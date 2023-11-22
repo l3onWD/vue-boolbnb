@@ -10,7 +10,7 @@ body {
     font-size: 14px;
 }
 
-main{
+main {
     height: calc(100vh - 121px);
     overflow: auto;
 }
@@ -34,6 +34,11 @@ h5,
 h6 {
     margin: 0;
     padding: 0;
+}
+
+h3 {
+    font-size: 18px;
+    text-wrap: wrap
 }
 
 // Buttons
@@ -76,7 +81,7 @@ button {
         padding: 10px 15px;
     }
 
-    button{
+    button {
         padding: 10px 15px;
     }
 
@@ -96,8 +101,8 @@ hr {
     margin: 0;
 }
 
-.card-img:hover{
-    img{
+.card-img:hover {
+    img {
         transform: scale(1.05);
     }
 }
@@ -115,4 +120,3 @@ hr {
 ::-webkit-scrollbar-track {
     background: transparent;
 }
-

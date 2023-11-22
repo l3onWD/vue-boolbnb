@@ -6,11 +6,12 @@ import '@tomtom-international/web-sdk-maps/dist/maps.css';
 
 //*** COMPONENTS ***//
 import AppLoader from '@/components/AppLoader.vue';
+import ApartmentImageSection from '@/components/apartment/ApartmentImageSection.vue';
 
 
 export default {
 
-    components: { AppLoader },
+    components: { AppLoader, ApartmentImageSection },
 
     data() {
         return {
@@ -180,28 +181,7 @@ export default {
             <div>
 
                 <!-- Image -->
-                <div class="slider">
-
-                    <div></div>
-
-                    <div v-if="apartment.image" class="image-container">
-                        <img :src="`http://127.0.0.1:8000/storage/${apartment.image}`" :alt="apartment.title">
-                    </div>
-
-                    <!-- Without image -->
-                    <div v-else class="no-image">
-                        <div class="icon">
-                            <img src="../assets/img/camera.png" alt="camera">
-                        </div>
-                        <h3>L'host non ha ancora inserito immagini, contattalo per saperne di più!</h3>
-                        <a href="#message-form">
-                            <FontAwesomeIcon :icon="['fas', 'arrow-down']" bounce size="2xl" />
-                        </a>
-                    </div>
-
-                    <div></div>
-
-                </div>
+                <ApartmentImageSection :image-file="apartment?.image" :image-title="apartment?.title" />
 
 
                 <!-- Information -->
@@ -444,6 +424,7 @@ export default {
                         </form>
                     </section>
                 </section>
+
             </div>
 
         </div>
@@ -460,55 +441,14 @@ export default {
 @use '@/assets/scss/vars' as *;
 
 // Apartment image
-.slider {
-    display: flex;
-
-    div:empty {
-        background-color: $light-grey;
-        flex-grow: 1;
-        border-radius: 20px;
-    }
-}
-
-
-// If there is
-.image-container {
-    @include square(calc(100vw - 24px), 20px);
-    @include max-size($max: true, $max-width: 100%, $max-height: 360px);
-    overflow: hidden;
-}
-
 img {
     @include max-size;
     object-fit: cover;
 }
 
-// If there in not image
-.no-image {
-    border: 1px solid $light-grey;
-    border-radius: 15px;
-    padding: 15px;
-    @include flex($direction: column, $gap: 20px);
-
-    .icon {
-        @include flex;
-        width: 30%;
-
-        img {
-            width: 100%;
-            filter: invert(44%) sepia(52%) saturate(6771%) hue-rotate(329deg) brightness(101%) contrast(101%);
-        }
-    }
-}
-
 // INFORMATION
 #apartments-details>div {
     padding: 24px 0;
-}
-
-h3 {
-    font-size: 18px;
-    text-wrap: wrap
 }
 
 ul {
@@ -678,14 +618,6 @@ ul {
             flex: 0 0 calc(50% - 5px);
         }
     }
-
-    .image-container {
-        @include max-size($max: true, $max-width: 696px, $max-height: 400px);
-    }
-
-    .no-image {
-        margin: 0 20px;
-    }
 }
 
 @media (min-width: 992px) {
@@ -699,14 +631,6 @@ ul {
 
     .service-all {
         flex-basis: 50%;
-    }
-
-    .slider {
-        gap: 20px;
-    }
-
-    .no-image {
-        margin: 0;
     }
 }
 </style>
