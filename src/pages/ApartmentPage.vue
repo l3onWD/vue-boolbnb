@@ -6,7 +6,7 @@ import '@tomtom-international/web-sdk-maps/dist/maps.css';
 
 //*** COMPONENTS ***//
 import AppLoader from '@/components/AppLoader.vue';
-import ApartmentImageSection from '@/components/apartment/ApartmentImageSection.vue';
+import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
 
 
 export default {
@@ -190,6 +190,7 @@ export default {
                     <div>
                         <!-- Address -->
                         <h3 class="mb-2">{{ apartment.address }}</h3>
+
                         <!-- Rooms -->
                         <ul>
                             <li>{{ apartment.rooms + ' ' + (apartment.rooms == 1 ? 'camera' : 'camere') }}</li>
