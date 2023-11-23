@@ -8,11 +8,12 @@ import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSec
 import ApartmentHostSection from '@/components/apartment/detail/ApartmentHostSection.vue';
 import ApartmentDescriptionSection from '@/components/apartment/detail/ApartmentDescriptionSection.vue';
 import ApartmentMapSection from '@/components/apartment/detail/ApartmentMapSection.vue';
+import ApartmentServicesSection from '@/components/apartment/detail/ApartmentServicesSection.vue';
 
 
 export default {
 
-    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection, ApartmentMapSection, ApartmentDescriptionSection },
+    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection, ApartmentMapSection, ApartmentDescriptionSection, ApartmentServicesSection },
 
     data() {
         return {
@@ -30,12 +31,13 @@ export default {
         }
     },
 
+    computed: {
+        hasErrors() {
+            return Object.entries(this.errors).length
+        }
+    },
+
     methods: {
-        // Get all services
-        fetchServices() {
-            apiClient.get('/services')
-                .then(res => { this.services = res.data });
-        },
 
         // Get apartment details
         getApartment() {
@@ -44,6 +46,7 @@ export default {
                 .catch(() => { this.$router.push({ name: 'not-found', query: { error: 404 } }) })
                 .then(() => { this.isLoading = false; });
         },
+
 
         // Send a message to the host
         sendMessage() {
@@ -78,6 +81,7 @@ export default {
             }
         },
 
+
         validation() {
             this.errors = {};
             if (!this.form.name) { this.errors.name = 'Il nome è obbligatorio' }
@@ -89,28 +93,6 @@ export default {
             }
         },
 
-        // Services not available in the apartment
-        serviceNotAvailable() {
-            // Services of the apartament (Available Services)
-            const avServ = this.apartment.services;
-
-            // Array with ids of available services
-            const avServId = avServ.map(s => s.id);
-
-            // Array with services not available
-            return this.services.filter(s => !avServId.includes(s.id));
-
-        },
-
-        getServiceClass() {
-            if (this.apartment.services.length <= 5) {
-                return 'services-small'
-            } else if (this.apartment.services.length <= 10) {
-                return 'services-medium'
-            } else if (this.apartment.services.length > 10) {
-                return 'services-large'
-            }
-        },
 
         isEmpty(obj) {
             return Object.entries(obj).length
@@ -118,15 +100,9 @@ export default {
 
     },
 
+
     created() {
         this.getApartment();
-        this.fetchServices();
-    },
-
-    computed: {
-        hasErrors() {
-            return Object.entries(this.errors).length
-        }
     }
 }
 </script>
@@ -176,83 +152,7 @@ export default {
                 <!-- Services -->
                 <hr>
 
-                <div :id="getServiceClass()" class="py-4">
-
-                    <h3 class="mb-3">Cosa troverai</h3>
-
-                    <div>
-
-                        <ul class="service-list onPage">
-                            <li v-for="service in apartment.services">
-                                <div><img :src="`http://127.0.0.1:8000/img/service/${service.icon}`" :alt="service.name">
-                                </div>
-                                <span>{{ service.name }}</span>
-                            </li>
-                        </ul>
-
-                        <div class="service-all">
-
-                            <h2>Scopri tutti i servizi</h2>
-
-                            <div>
-                                <!-- Modal Button -->
-                                <button type="button" class="services-button button button-light" data-bs-toggle="modal"
-                                    data-bs-target="#serviceModal">Mostra tutti i {{ services.length }}
-                                    servizi </button>
-                            </div>
-
-                        </div>
-
-                        <!-- Service modal -->
-                        <div class="modal fade modal-lg" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel"
-                            aria-hidden="true">
-
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <h3 class="mb-3">Cosa troverai</h3>
-
-                                        <ul class="service-list modal-services">
-                                            <li v-for="service in apartment.services">
-                                                <div><img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
-                                                        :alt="service.name"></div>
-                                                <span>{{ service.name }}</span>
-                                            </li>
-                                        </ul>
-
-                                        <div v-if="serviceNotAvailable().length">
-
-                                            <h3 class="mt-5 mb-3">Non incluso</h3>
-
-                                            <ul class="service-list modal-services">
-                                                <li v-for="service in serviceNotAvailable()">
-                                                    <div>
-                                                        <img :src="`http://127.0.0.1:8000/img/service/${service.icon}`"
-                                                            :alt="service.name">
-                                                    </div>
-                                                    <span class="text-decoration-line-through">{{ service.name }}</span>
-                                                </li>
-                                            </ul>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
+                <ApartmentServicesSection :services="apartment.services" />
 
 
                 <!-- Map -->
@@ -383,82 +283,6 @@ export default {
 <style lang="scss" scoped>
 @use '@/assets/scss/vars' as *;
 
-// Apartment image
-img {
-    @include max-size;
-    object-fit: cover;
-}
-
-ul {
-    display: flex;
-    gap: 20px;
-    font-size: 16px;
-}
-
-// _____________SERVICES
-// LEFT PART
-// Service list generics
-.service-list {
-    @include flex(stretch, stretch, column, wrap, 10px);
-    flex-grow: 1;
-
-    li {
-        @include flex(start, center, $gap: 7px);
-        border: 1px solid $light-grey;
-        border-radius: 15px;
-        padding: 10px;
-
-        div {
-            @include square(20px);
-            overflow: hidden;
-
-            img {
-                @include max-size;
-                object-fit: contain;
-                filter: brightness(0) saturate(100%);
-                display: block
-            }
-        }
-    }
-}
-
-// Service list on apartment page
-.service-list.onPage {
-    max-height: 270px;
-    overflow: hidden;
-    flex-wrap: nowrap;
-}
-
-// RIGHT PART
-.service-all {
-    @include flex(center, center, column, $gap: 10px);
-    padding: 20px 0;
-
-    h2 {
-        display: none;
-    }
-}
-
-// Button modal
-.services-button {
-    display: flex;
-}
-
-#services-small>div,
-#services-medium>div,
-#services-large>div {
-    display: flex;
-    flex-direction: column;
-}
-
-// Service list on modal
-.service-list.modal-services {
-    @include flex(center, stretch, column, wrap, 10px);
-
-    li div {
-        @include square(30px);
-    }
-}
 
 // Section message
 #message-form {
@@ -485,75 +309,5 @@ ul {
 .dropdown-menu {
     @include font;
     padding: 8px 5px;
-}
-
-/////////////////
-// MEDIA QUERY //
-/////////////////
-
-@media (min-width: 576px) {
-    .service-list.onPage {
-        flex-wrap: wrap;
-    }
-
-    #services-large .service-list.onPage {
-        gap: 5px;
-
-        li {
-            width: calc(50% - 7px / 2);
-        }
-    }
-
-    .service-all {
-        flex-basis: 50%;
-    }
-}
-
-@media (min-width: 768px) {
-
-    #services-small,
-    #services-medium {
-        flex-basis: 45%;
-
-        &>div {
-            flex-direction: row;
-        }
-
-        h2 {
-            display: flex;
-        }
-    }
-
-    #services-large .service-list.onPage {
-        li {
-            width: 32%
-        }
-    }
-
-    .service-list.onPage {
-        gap: 7px;
-    }
-
-    .service-list.modal-services {
-        @include flex(start, center, row, wrap, 10px);
-
-        li {
-            flex: 0 0 calc(50% - 5px);
-        }
-    }
-}
-
-@media (min-width: 992px) {
-    .service-list.onPage {
-        gap: 10px;
-    }
-
-    #services-large .service-list.onPage {
-        gap: 7px;
-    }
-
-    .service-all {
-        flex-basis: 50%;
-    }
 }
 </style>
