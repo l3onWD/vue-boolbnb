@@ -152,7 +152,7 @@ const mainServices = computed(() => {
         text-align: center;
         font-weight: bold;
         color: #fff;
-        background-color: $brand-color;
+        background-color: $col-brand;
 
         transform: rotate(315deg);
         box-shadow: 0 0 8px 4px rgba($color: #000, $alpha: 0.1);
@@ -191,7 +191,7 @@ const mainServices = computed(() => {
             @include square(25px);
             padding: 2px;
 
-            // border: 1px solid $brand-color;
+            // border: 1px solid $col-brand;
             background-color: #000;
             border-radius: 0.25rem;
 

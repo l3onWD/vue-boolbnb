@@ -40,7 +40,7 @@ defineProps({
     padding: 10px;
 
     @include flex(start, center, $gap: 7px);
-    border: 1px solid $light-grey;
+    border: 1px solid $col-lightgrey;
     border-radius: 15px;
 
     div {

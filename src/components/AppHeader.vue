@@ -63,7 +63,7 @@ import SearchLocation from '@/components/header/SearchLocation.vue';
     z-index: 2;
 
     .app-header-top {
-        border-bottom: 1px solid $light-grey;
+        border-bottom: 1px solid $col-lightgrey;
     }
 
     .row {

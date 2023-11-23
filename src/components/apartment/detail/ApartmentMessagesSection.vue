@@ -239,7 +239,7 @@ const validation = () => {
 .spinner-border {
     @include circle(40px);
 
-    color: $brand-color;
+    color: $col-brand;
 }
 
 .dropdown-menu {

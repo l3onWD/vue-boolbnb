@@ -53,7 +53,7 @@
     }
 
     to {
-        background-color: $light-grey;
+        background-color: $col-lightgrey;
     }
 }
 </style>

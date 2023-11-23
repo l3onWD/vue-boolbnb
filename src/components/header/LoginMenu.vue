@@ -147,7 +147,7 @@ fetchUser();
     .login-menu {
         padding: 0 6px 0 10px;
 
-        border: 1px solid $light-grey;
+        border: 1px solid $col-lightgrey;
         border-radius: 40px;
 
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);

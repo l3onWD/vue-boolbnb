@@ -174,7 +174,7 @@ watch(isSearchPage, (isSearchPage) => {
 
     @include flex;
     flex-grow: 1;
-    border: 1px solid $light-grey;
+    border: 1px solid $col-lightgrey;
     border-radius: 40px;
 
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -205,7 +205,7 @@ watch(isSearchPage, (isSearchPage) => {
 
         @include flex;
         color: white;
-        background-color: $brand-color;
+        background-color: $col-brand;
         border-radius: 0 50% 50% 0;
     }
 }

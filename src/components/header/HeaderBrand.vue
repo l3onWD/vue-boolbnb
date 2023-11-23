@@ -31,7 +31,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Brand';
     }
 
     h1 {
-        @include font(700, 25px, $color: $brand-color, $spacing: -1px);
+        @include font(700, 25px, $color: $col-brand, $spacing: -1px);
     }
 }
 </style>

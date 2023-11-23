@@ -39,7 +39,7 @@
 
 footer {
     height: 40px;
-    border-top: 1px solid $light-grey;
+    border-top: 1px solid $col-lightgrey;
 
     .container {
         height: 100%;

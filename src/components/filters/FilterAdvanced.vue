@@ -222,7 +222,7 @@ updateFilters();
 
     @include flex;
     gap: 10px;
-    border: 1px solid $light-grey;
+    border: 1px solid $col-lightgrey;
 
     &.has-filter {
         border: 2px solid #000;
@@ -235,7 +235,7 @@ updateFilters();
         left: 65%;
 
         @include flex();
-        background-color: $brand-color;
+        background-color: $col-brand;
         color: #fff;
         font-size: 10px;
     }

@@ -53,7 +53,7 @@ defineProps({
         content: '';
 
         display: none;
-        background-color: $light-grey;
+        background-color: $col-lightgrey;
         border-radius: 20px;
     }
 
@@ -72,7 +72,7 @@ defineProps({
         padding: 15px;
 
         @include flex($direction: column, $gap: 20px);
-        border: 1px solid $light-grey;
+        border: 1px solid $col-lightgrey;
         border-radius: 15px;
 
         .icon {

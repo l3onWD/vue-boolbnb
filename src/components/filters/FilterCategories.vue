@@ -89,7 +89,7 @@ const queryParams = computed(() => {
 
         &:hover,
         &.active {
-            border-color: $brand-color;
+            border-color: $col-brand;
             color: #000;
 
             img {

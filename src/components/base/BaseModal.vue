@@ -77,7 +77,7 @@ const onClickOutside = (e) => {
 
         background-color: #fff;
         border-radius: 0.5rem;
-        border: 1px solid $light-grey;
+        border: 1px solid $col-lightgrey;
     }
 
     &-header {
@@ -86,7 +86,7 @@ const onClickOutside = (e) => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid $light-grey;
+        border-bottom: 1px solid $col-lightgrey;
     }
 
     &-body {
