@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
-import AppLoader from '@/components/AppLoader.vue';
+import DetailPagePlaceholder from '@/components/placeholders/DetailPagePlaceholder.vue';
 import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
 import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSection.vue';
 import ApartmentHostSection from '@/components/apartment/detail/ApartmentHostSection.vue';
@@ -30,9 +30,13 @@ apiClient.get('/apartments/' + route.params.id)
 
 
 <template>
-    <main>
+    <main class="container">
 
-        <div v-if="!isLoading" class="container">
+        <!-- Loader -->
+        <DetailPagePlaceholder v-if="isLoading" class="my-4" />
+
+        <!-- Page Content -->
+        <div v-else>
 
             <!-- Header -->
             <header class="d-flex align-items-center justify-content-between py-4">
@@ -88,8 +92,4 @@ apiClient.get('/apartments/' + route.params.id)
         </div>
 
     </main>
-
-
-    <!-- Loader -->
-    <AppLoader :is-loading="isLoading" />
 </template>
