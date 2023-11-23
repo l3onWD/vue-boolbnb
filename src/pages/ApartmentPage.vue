@@ -1,4 +1,6 @@
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
@@ -12,35 +14,18 @@ import ApartmentServicesSection from '@/components/apartment/detail/ApartmentSer
 import ApartmentMessagesSection from '@/components/apartment/detail/ApartmentMessagesSection.vue';
 
 
-export default {
-
-    components: { AppLoader, ApartmentImageSection, ApartmentInfoSection, ApartmentHostSection, ApartmentMapSection, ApartmentDescriptionSection, ApartmentServicesSection, ApartmentMessagesSection },
-
-    data() {
-        return {
-            apartment: null,
-            services: [],
-            isLoading: true
-        }
-    },
-
-    methods: {
-
-        // Get apartment details
-        getApartment() {
-            apiClient.get('/apartments/' + this.$route.params.id)
-                .then(res => { this.apartment = res.data })
-                .catch(() => { this.$router.push({ name: 'not-found', query: { error: 404 } }) })
-                .then(() => { this.isLoading = false; });
-        }
-
-    },
+//*** DATA ***//
+const apartment = ref(null);
+const isLoading = ref(true);
+const router = useRouter();
+const route = useRoute();
 
 
-    created() {
-        this.getApartment();
-    }
-}
+// Get apartment
+apiClient.get('/apartments/' + route.params.id)
+    .then(res => { apartment.value = res.data })
+    .catch(() => { router.push({ name: 'not-found', query: { error: 404 } }) })
+    .then(() => { isLoading.value = false; });
 </script>
 
 
@@ -54,56 +39,51 @@ export default {
 
                 <h2>{{ apartment.title }}</h2>
 
-                <button class="circle-button" @click="$router.back()">
+                <button class="circle-button" @click="router.back()">
                     <FontAwesomeIcon :icon="['fas', 'chevron-left']" />
                 </button>
 
             </header>
 
 
-            <!-- Page Content -->
-            <div>
-
-                <!-- Image -->
-                <ApartmentImageSection :image-file="apartment.image" :image-title="apartment.title" />
+            <!-- Image -->
+            <ApartmentImageSection :image-file="apartment.image" :image-title="apartment.title" />
 
 
-                <!-- Info -->
-                <ApartmentInfoSection :address="apartment.address" :rooms="apartment.rooms" :beds="apartment.beds"
-                    :bathrooms="apartment.bathrooms" />
+            <!-- Info -->
+            <ApartmentInfoSection :address="apartment.address" :rooms="apartment.rooms" :beds="apartment.beds"
+                :bathrooms="apartment.bathrooms" />
 
 
-                <!-- Host information -->
-                <hr v-if="apartment.user.name">
+            <!-- Host information -->
+            <hr v-if="apartment.user.name">
 
-                <ApartmentHostSection v-if="apartment.user.name" :hostName="apartment.user.name" />
-
-
-                <!-- Description -->
-                <hr>
-
-                <ApartmentDescriptionSection :description="apartment.description" />
+            <ApartmentHostSection v-if="apartment.user.name" :hostName="apartment.user.name" />
 
 
-                <!-- Services -->
-                <hr>
+            <!-- Description -->
+            <hr>
 
-                <ApartmentServicesSection :services="apartment.services" />
-
-
-                <!-- Map -->
-                <hr v-if="apartment.address">
-
-                <ApartmentMapSection v-if="apartment.address" :address="apartment.address" :latitude="apartment.latitude"
-                    :longitude="apartment.longitude" />
+            <ApartmentDescriptionSection :description="apartment.description" />
 
 
-                <!-- Messages -->
-                <hr>
+            <!-- Services -->
+            <hr>
 
-                <ApartmentMessagesSection :apartment-id="apartment.id" />
+            <ApartmentServicesSection :services="apartment.services" />
 
-            </div>
+
+            <!-- Map -->
+            <hr v-if="apartment.address">
+
+            <ApartmentMapSection v-if="apartment.address" :address="apartment.address" :latitude="apartment.latitude"
+                :longitude="apartment.longitude" />
+
+
+            <!-- Messages -->
+            <hr>
+
+            <ApartmentMessagesSection :apartment-id="apartment.id" />
 
         </div>
 
