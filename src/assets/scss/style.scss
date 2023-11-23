@@ -1,9 +1,11 @@
-// Bootstrap
+// BOOTSTRAP
 @use 'bootstrap/scss/bootstrap.scss';
-// Variables
+
+// VARS & MIXINS
 @use './vars' as *;
 
-//__________________ General rules
+
+//GENERICS
 body {
     display: block;
     font-family: $roboto;
@@ -41,13 +43,17 @@ h3 {
     text-wrap: wrap
 }
 
-// Buttons
+hr {
+    margin: 0;
+}
+
 button {
     background-color: transparent;
     border: none;
     padding: 0;
 }
 
+// BUTTONS
 .button {
     border: 1px solid black;
     border-radius: 10px;
@@ -96,18 +102,15 @@ button {
     border: 2px solid black;
 }
 
-//___
-hr {
-    margin: 0;
-}
 
+// CARDS
 .card-img:hover {
     img {
         transform: scale(1.05);
     }
 }
 
-// ________Scrollbar
+// CUSTOM SCROLLBAR
 ::-webkit-scrollbar {
     width: 5px;
     height: 3px;
