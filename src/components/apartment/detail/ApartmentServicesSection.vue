@@ -58,7 +58,7 @@ apiClient.get('/services')
         <div class="services-container">
 
             <!-- Service List -->
-            <ul class="service-list">
+            <ul class="service-list pe-md-3">
                 <li v-for="service in services">
                     <ServiceCard :name="service.name" :iconFile="service.icon" />
                 </li>
