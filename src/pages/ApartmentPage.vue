@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiClient } from '@/http/';
 
 //*** COMPONENTS ***//
+import TheBackTopButton from '@/components/base/TheBackTopButton.vue';
 import DetailPagePlaceholder from '@/components/placeholders/DetailPagePlaceholder.vue';
 import ApartmentImageSection from '@/components/apartment/detail/ApartmentImageSection.vue';
 import ApartmentInfoSection from '@/components/apartment/detail/ApartmentInfoSection.vue';
@@ -14,23 +15,70 @@ import ApartmentServicesSection from '@/components/apartment/detail/ApartmentSer
 import ApartmentMessagesSection from '@/components/apartment/detail/ApartmentMessagesSection.vue';
 
 
-//*** DATA ***//
+//*** APARTMENT DETAIL ***//
+// Data
 const apartment = ref(null);
 const isLoading = ref(true);
 const router = useRouter();
 const route = useRoute();
-
 
 // Get apartment
 apiClient.get('/apartments/' + route.params.id)
     .then(res => { apartment.value = res.data })
     .catch(() => { router.push({ name: 'not-found', query: { error: 404 } }) })
     .then(() => { isLoading.value = false; });
+
+
+
+//*** BACK TOP BUTTON ***//
+// Data
+const backTopVisibilityThreshold = 200;
+const isBackTopVisible = ref(false);
+const mainContent = ref(null);
+const scrollThrottling = ref(false);
+
+// Functions
+const handleBackTopVisibility = () => {
+    if (mainContent.value.scrollTop >= backTopVisibilityThreshold) isBackTopVisible.value = true;
+    else isBackTopVisible.value = false;
+}
+
+const backTop = () => {
+    mainContent.value.scrollTop = 0;
+}
+
+const handleScroll = () => {
+
+    // Scroll Throttling
+    if (!scrollThrottling.value) {
+
+        window.requestAnimationFrame(() => {
+
+            // Back top visibility logic
+            handleBackTopVisibility();
+
+            scrollThrottling.value = false;
+        });
+
+        scrollThrottling.value = true;
+    }
+
+}
+
+// Lifehooks
+onMounted(() => {
+    mainContent.value.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+    mainContent.value.removeEventListener('scroll', handleScroll);
+});
+
 </script>
 
 
 <template>
-    <main class="container">
+    <main class="container" ref="mainContent">
 
         <!-- Loader -->
         <DetailPagePlaceholder v-if="isLoading" class="my-4" />
@@ -88,6 +136,10 @@ apiClient.get('/apartments/' + route.params.id)
             <hr>
 
             <ApartmentMessagesSection :apartment-id="apartment.id" />
+
+
+            <!-- Back-top-button -->
+            <TheBackTopButton :isVisible="isBackTopVisible" @@back-top="backTop" />
 
         </div>
 
