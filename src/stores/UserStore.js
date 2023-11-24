@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 export const useUserStore = defineStore('user', () => {
 
     //*** DATA ***//
-    const user = ref(null);
+    const user = ref(localStorage.user ? JSON.parse(localStorage.user) : null);
 
     //*** GETTERS ***//
     const isLogged = computed(() => user.value !== null);

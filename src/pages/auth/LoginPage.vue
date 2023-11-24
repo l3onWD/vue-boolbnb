@@ -63,6 +63,9 @@ const login = async () => {
         // Attempt login
         const { data } = await apiClient.post('/api/login', form);
 
+        // Save user to local storage
+        localStorage.user = JSON.stringify(data);
+
         // Set user
         setUser(data);
 
