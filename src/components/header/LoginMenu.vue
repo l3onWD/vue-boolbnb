@@ -1,18 +1,48 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import { storeToRefs } from 'pinia';
+import { apiClient } from '@/http/';
 
 
 //*** DATA ***/
+const router = useRouter();
 const userStore = useUserStore();
 const { user, isLogged } = storeToRefs(userStore);
+const { removeUser } = userStore;
+const isLoading = ref(false);
 
 // Calculate username first letter
 const userNameChar = computed(() => {
     if (!user.value) return '';
     return user.value.name.substring(0, 1).toUpperCase();
 });
+
+
+// Logout logic
+const logout = () => {
+
+    isLoading.value = true;
+
+    apiClient.delete('/api/logout')
+        .then(() => {
+            // Reset browser store
+            localStorage.removeItem('user');
+
+            // Reset user store
+            removeUser();
+
+            // Redirect to login
+            router.push({ name: 'login' })
+        })
+        .catch(err => {
+            console.error(err);
+        })
+        .then(() => {
+            isLoading.value = false;
+        });
+}
 
 </script>
 
@@ -28,8 +58,11 @@ const userNameChar = computed(() => {
 
             <div class="login-menu-icon">
 
+                <!-- Bootstrap Spinner -->
+                <div v-if="isLoading" class="spinner-border" role="status"></div>
+
                 <!-- User Logged Letter -->
-                <span v-if="isLogged">{{ userNameChar }}</span>
+                <span v-else-if="isLogged">{{ userNameChar }}</span>
 
                 <!-- User Disconnected Icon -->
                 <FontAwesomeIcon v-else icon="user" />
@@ -54,6 +87,9 @@ const userNameChar = computed(() => {
                     </li>
                     <li>
                         <a class="dropdown-item disabled" href="http://127.0.0.1:8000/login">Messaggi</a>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" @click="logout">Logout</button>
                     </li>
 
                     <li>
@@ -114,6 +150,10 @@ const userNameChar = computed(() => {
         @include flex;
         color: white;
         background-color: black;
+    }
+
+    .spinner-border {
+        @include circle(15px);
     }
 
     ul.dropdown-menu.show {
