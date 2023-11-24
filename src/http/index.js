@@ -25,4 +25,22 @@ const apiClient = axios.create({
     withCredentials: true
 });
 
+// Intercepts unauthorized errors caused by session ended while browsing
+apiClient.interceptors.response.use(
+    res => res,
+    err => {
+        // Check unauthorized in all pages excepts login
+        if (err.response.status === 401 && err.response.message !== 'login-failed') {
+            // Remove user from storage
+            localStorage.removeItem('user');
+
+            // Reload page
+            window.location.reload();
+        }
+
+        // Otherwise return error
+        Promise.reject(err)
+    });
+
+
 export { ttClient, apiClient };
