@@ -13,7 +13,7 @@ const categories = reactive([]);
 
 // Functions
 const fetchCategories = () => {
-    apiClient.get('/categories')
+    apiClient.get('/api/categories')
         .then(({ data }) => {
             categories.splice(0, categories.length);
             categories.push(...data);

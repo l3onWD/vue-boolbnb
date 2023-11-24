@@ -22,7 +22,7 @@ const router = useRouter();
 const route = useRoute();
 
 // Get apartment
-apiClient.get('/apartments/' + route.params.id)
+apiClient.get('/api/apartments/' + route.params.id)
     .then(res => { apartment.value = res.data })
     .catch(() => { router.push({ name: 'not-found', query: { error: 404 } }) })
     .then(() => { isLoading.value = false; });

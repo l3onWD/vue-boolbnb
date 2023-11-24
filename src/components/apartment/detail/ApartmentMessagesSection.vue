@@ -65,7 +65,7 @@ const sendMessage = () => {
     };
 
     // Send message
-    apiClient.post('/messages', params)
+    apiClient.post('/api/messages', params)
         .then(() => {
 
             // Reset form

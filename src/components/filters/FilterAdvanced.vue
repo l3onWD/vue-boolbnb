@@ -15,7 +15,7 @@ const servicesList = reactive([]);
 // Functions
 const fetchServices = () => {
 
-    apiClient.get('/services')
+    apiClient.get('/api/services')
         .then(({ data }) => {
             servicesList.splice(0, servicesList.length);
             servicesList.push(...data);

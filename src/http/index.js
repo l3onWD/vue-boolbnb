@@ -17,9 +17,12 @@ ttClient.interceptors.request.use(config => {
 
 
 //*** API CLIENT ***/
-const apiBaseURL = 'http://localhost:8000/api';
+const apiBaseURL = 'http://localhost:8000';
 
 // Create API Axios instance
-const apiClient = axios.create({ baseURL: apiBaseURL });
+const apiClient = axios.create({
+    baseURL: apiBaseURL,
+    withCredentials: true
+});
 
 export { ttClient, apiClient };

@@ -42,7 +42,7 @@ const servicesContainerId = computed(() => {
 
 //*** LOGIC ***//
 // Get all services
-apiClient.get('/services')
+apiClient.get('/api/services')
     .then(res => { allServices.push(...res.data) });
 
 </script>

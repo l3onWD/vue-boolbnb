@@ -20,7 +20,7 @@ const fetchUser = () => {
     return;// TODO
     isLoading.value = true;
 
-    apiClient.get('/user')
+    apiClient.get('/api/user')
         .then(res => {
             user.value = res.data[0];
             isLoading.value = false;

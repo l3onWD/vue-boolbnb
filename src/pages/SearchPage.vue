@@ -32,7 +32,7 @@ const fetchApartments = () => {
 
 
     // Call API
-    apiClient.get('apartments/filter', { params })
+    apiClient.get('/apiapartments/filter', { params })
         .then(res => {
             apartments.push(...res.data);
         })

@@ -25,7 +25,7 @@ const fetchApartments = (endpoint = '', successCallback) => {
 
     isLoading.value = true;
 
-    apiClient.get('/apartments' + endpoint)
+    apiClient.get('/api/apartments' + endpoint)
         .then(successCallback)
         .catch(err => {
             console.error(err);
