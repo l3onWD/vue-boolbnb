@@ -14,6 +14,9 @@ body {
 
 main {
     height: calc(100vh - 121px);
+    position: relative;
+
+    scroll-behavior: smooth;
     overflow: auto;
 }
 
