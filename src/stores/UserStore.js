@@ -11,8 +11,8 @@ export const useUserStore = defineStore('user', () => {
     const isLogged = computed(() => user.value !== null);
 
     //*** ACTIONS ***//
-    const setUser = user => { user.value = user };
-    const removeUser = user => { user.value = null };
+    const setUser = newUser => { user.value = newUser };
+    const removeUser = () => { user.value = null };
 
 
     return { user, isLogged, setUser, removeUser };
