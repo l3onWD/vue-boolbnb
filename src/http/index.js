@@ -29,8 +29,9 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
     res => res,
     err => {
+        console.log(err);
         // Check unauthorized in all pages excepts login
-        if (err.response.status === 401 && err.response.message !== 'login-failed') {
+        if (err.response.status === 401 && err.response.data !== 'login-failed') {
             // Remove user from storage
             localStorage.removeItem('user');
 
