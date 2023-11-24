@@ -1,37 +1,18 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { apiClient } from '@/http/';
+import { computed } from 'vue';
+import { useUserStore } from '@/stores/UserStore';
+import { storeToRefs } from 'pinia';
 
 
 //*** DATA ***/
-const user = ref(null);
-const isLoading = ref(false);
+const userStore = useUserStore();
+const { user, isLogged } = storeToRefs(userStore);
 
 // Calculate username first letter
 const userNameChar = computed(() => {
     if (!user.value) return '';
     return user.value.name.substring(0, 1).toUpperCase();
 });
-
-
-//*** FUNCTIONS ***/
-// Get user details
-const fetchUser = () => {
-    return;// TODO
-    isLoading.value = true;
-
-    apiClient.get('/api/user')
-        .then(res => {
-            user.value = res.data[0];
-            isLoading.value = false;
-        })
-        .catch(err => { console.error(err.response.data) })
-        .then(() => { isLoading.value = false });
-}
-
-
-//*** FETCH USERS ***/
-fetchUser();
 
 </script>
 
@@ -47,12 +28,8 @@ fetchUser();
 
             <div class="login-menu-icon">
 
-                <!-- Bootstrap Spinner -->
-                <div v-if="isLoading" class="spinner-border" role="status" style="width: 15px; height: 15px;">
-                </div>
-
                 <!-- User Logged Letter -->
-                <span v-else-if="user">{{ userNameChar }}</span>
+                <span v-if="isLogged">{{ userNameChar }}</span>
 
                 <!-- User Disconnected Icon -->
                 <FontAwesomeIcon v-else icon="user" />
@@ -66,7 +43,7 @@ fetchUser();
         <ul class="dropdown-menu">
 
             <!-- Account Menu -->
-            <li v-if="user">
+            <li v-if="isLogged">
                 <ul>
                     <li>
                         <a class="dropdown-item" href="http://127.0.0.1:8000/admin/apartments">I miei
