@@ -1,4 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import auth from '@/router/middlewares/auth.js';
+
+
+//*** PAGES ***/
 import HomePage from '@/pages/HomePage.vue';
 import ApartmentPage from '@/pages/ApartmentPage.vue';
 import SearchPage from '@/pages/SearchPage.vue';
@@ -13,9 +17,19 @@ const router = createRouter({
         { path: '/apartments/:id', name: 'apartment', component: ApartmentPage },
         { path: '/search', name: 'search', component: SearchPage },
 
-        { path: '/dashboard', name: 'dashboard', component: DashboardPage },
+        {
+            path: '/dashboard',
+            name: 'dashboard',
+            component: DashboardPage,
+            beforeEnter: auth.admin
+        },
 
-        { path: '/login', name: 'login', component: LoginPage },
+        {
+            path: '/login',
+            name: 'login',
+            component: LoginPage,
+            beforeEnter: auth.guest
+        },
 
         { path: '/not-found', name: 'not-found', component: NotFoundPage },
         { path: '/:pathMatch(.*)*', redirect: '/not-found' },
