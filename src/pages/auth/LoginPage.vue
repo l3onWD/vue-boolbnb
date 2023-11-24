@@ -1,5 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import { apiClient } from '@/http/';
 
@@ -49,6 +50,7 @@ const validateForm = () => {
 const userStore = useUserStore();
 const { setUser } = userStore;
 const isLoading = ref(false);
+const router = useRouter();
 
 const login = async () => {
 
@@ -63,6 +65,9 @@ const login = async () => {
 
         // Set user
         setUser(data);
+
+        // Redirect
+        router.push({ name: 'dashboard' })
 
     } catch (err) {
         errors.value.generic = 'Le Credenziali non sono valide';
