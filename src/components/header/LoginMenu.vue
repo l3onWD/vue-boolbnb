@@ -17,7 +17,7 @@ const userNameChar = computed(() => {
 //*** FUNCTIONS ***/
 // Get user details
 const fetchUser = () => {
-
+    return;// TODO
     isLoading.value = true;
 
     apiClient.get('/user')
@@ -97,7 +97,9 @@ fetchUser();
             <li v-else>
                 <ul>
                     <li>
-                        <a class="dropdown-item" href="http://127.0.0.1:8000/login"><b>Accedi</b></a>
+                        <RouterLink class="dropdown-item" :to="{ name: 'login' }">
+                            <strong>Accedi</strong>
+                        </RouterLink>
                     </li>
                     <li>
                         <a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a>
