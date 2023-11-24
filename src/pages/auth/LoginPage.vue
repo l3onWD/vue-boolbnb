@@ -65,7 +65,7 @@ const login = async () => {
         setUser(data);
 
     } catch (err) {
-        console.error(err);
+        errors.value.generic = 'Le Credenziali non sono valide';
     } finally {
         isLoading.value = false;
     }
@@ -82,7 +82,13 @@ const login = async () => {
 
             <h2 class="mb-4">Accedi</h2>
 
+            <!-- Generic Error -->
+            <div v-if="errors.generic" class="alert alert-danger">{{ errors.generic }}</div>
+
+            <!-- Form -->
             <form @submit.prevent="submitForm" novalidate>
+
+                <!-- Email -->
                 <div class="row mb-4">
                     <label for="email" class="col-form-label col-12 col-md-4">E-Mail</label>
                     <div class="col-12 col-md-6">
@@ -94,6 +100,7 @@ const login = async () => {
                     </div>
                 </div>
 
+                <!-- Password -->
                 <div class="row mb-4">
                     <label for="password" class="col-form-label col-12 col-md-4">Password</label>
                     <div class="col-12 col-md-6">
@@ -105,6 +112,7 @@ const login = async () => {
                     </div>
                 </div>
 
+                <!-- Submit -->
                 <div class="d-flex justify-content-md-center">
                     <button class="button button-brand">
                         <div v-if="isLoading" class="spinner-border" role="status"></div>
