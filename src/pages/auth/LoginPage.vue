@@ -1,9 +1,11 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
+import { useUserStore } from '@/stores/UserStore';
 import { apiClient } from '@/http/';
 
 
-//*** DATA ***//
+//*** FORM ***//
+// Data
 const form = reactive({
     email: '',
     password: ''
@@ -13,14 +15,17 @@ const errors = ref({});
 const hasErrors = computed(() => Object.entries(errors.value).length);
 
 
-//*** FUNCTIONS ***//
+// Functions
 const submitForm = () => {
+
+    if (isLoading.value) return;
 
     // Validation
     validateForm();
     if (hasErrors.value) return;
 
     // Login
+    login();
 }
 
 const validateForm = () => {
@@ -35,8 +40,37 @@ const validateForm = () => {
 
     // Password Validation
     if (!form.password) errors.value.password = 'La password è obbligatoria';
+
+    else if (form.password.length < 5) errors.value.password = 'La password è troppo corta';
 }
 
+
+//*** LOGIN ***//
+const userStore = useUserStore();
+const { setUser } = userStore;
+const isLoading = ref(false);
+
+const login = async () => {
+
+    isLoading.value = true;
+
+    try {
+        // Get cookie with token
+        await apiClient.get('/sanctum/csrf-cookie');
+
+        // Attempt login
+        const { data } = await apiClient.post('/api/login', form);
+
+        // Set user
+        setUser(data);
+
+    } catch (err) {
+        console.error(err);
+    } finally {
+        isLoading.value = false;
+    }
+
+}
 
 </script>
 
@@ -54,7 +88,7 @@ const validateForm = () => {
                     <div class="col-12 col-md-6">
                         <!-- Input -->
                         <input v-model.trim="form.email" id="email" type="email" class="form-control"
-                            :class="{ 'is-invalid': errors.email }" autocomplete="email">
+                            :class="{ 'is-invalid': errors.email }" autocomplete="email" :disabled="isLoading">
                         <!-- Errors -->
                         <div class="invalid-feedback"> {{ errors.email }} </div>
                     </div>
@@ -65,14 +99,17 @@ const validateForm = () => {
                     <div class="col-12 col-md-6">
                         <!-- Input -->
                         <input v-model.trim="form.password" id="password" type="password" class="form-control"
-                            :class="{ 'is-invalid': errors.password }">
+                            :class="{ 'is-invalid': errors.password }" :disabled="isLoading">
                         <!-- Errors -->
                         <div class="invalid-feedback"> {{ errors.password }} </div>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-md-center">
-                    <button class="button button-brand">Login</button>
+                    <button class="button button-brand">
+                        <div v-if="isLoading" class="spinner-border" role="status"></div>
+                        <span v-else>Login</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -82,6 +119,8 @@ const validateForm = () => {
 
 
 <style lang="scss" scoped>
+@use '@/assets/scss/vars' as *;
+
 #login-page {
 
     display: flex;
@@ -93,6 +132,10 @@ const validateForm = () => {
 
         border-radius: 0.5rem;
         box-shadow: 0 0 8px 4px rgba($color: #000, $alpha: 0.1);
+    }
+
+    .spinner-border {
+        @include circle(20px);
     }
 }
 
