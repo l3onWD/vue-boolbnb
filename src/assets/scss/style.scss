@@ -77,6 +77,20 @@ button {
     }
 }
 
+.button-brand {
+    padding: 10px 32px;
+
+    @include flex;
+    color: #fff;
+    background-color: $col-brand;
+    border-color: transparent;
+    border-radius: 50px;
+
+    &:hover {
+        background-color: $col-lightbrand;
+    }
+}
+
 .circle-button {
     @include circle(40px);
     @include flex;
