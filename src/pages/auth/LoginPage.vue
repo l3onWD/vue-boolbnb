@@ -1,4 +1,42 @@
 <script setup>
+import { computed, reactive, ref } from 'vue';
+import { apiClient } from '@/http/';
+
+
+//*** DATA ***//
+const form = reactive({
+    email: '',
+    password: ''
+});
+const errors = ref({});
+
+const hasErrors = computed(() => Object.entries(errors.value).length);
+
+
+//*** FUNCTIONS ***//
+const submitForm = () => {
+
+    // Validation
+    validateForm();
+    if (hasErrors.value) return;
+
+    // Login
+}
+
+const validateForm = () => {
+    errors.value = {};
+
+    // Email Validation
+    if (!form.email) errors.value.email = 'La mail è obbligatoria';
+
+    else if (!form.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+        errors.value.email = 'La mail inserita non è valida'
+    }
+
+    // Password Validation
+    if (!form.password) errors.value.password = 'La password è obbligatoria';
+}
+
 
 </script>
 
@@ -10,18 +48,26 @@
 
             <h2 class="mb-4">Accedi</h2>
 
-            <form>
+            <form @submit.prevent="submitForm" novalidate>
                 <div class="row mb-4">
                     <label for="email" class="col-form-label col-12 col-md-4">E-Mail</label>
                     <div class="col-12 col-md-6">
-                        <input id="email" type="email" class="form-control" autocomplete="email">
+                        <!-- Input -->
+                        <input v-model.trim="form.email" id="email" type="email" class="form-control"
+                            :class="{ 'is-invalid': errors.email }" autocomplete="email">
+                        <!-- Errors -->
+                        <div class="invalid-feedback"> {{ errors.email }} </div>
                     </div>
                 </div>
 
                 <div class="row mb-4">
                     <label for="password" class="col-form-label col-12 col-md-4">Password</label>
                     <div class="col-12 col-md-6">
-                        <input id="password" type="password" class="form-control">
+                        <!-- Input -->
+                        <input v-model.trim="form.password" id="password" type="password" class="form-control"
+                            :class="{ 'is-invalid': errors.password }">
+                        <!-- Errors -->
+                        <div class="invalid-feedback"> {{ errors.password }} </div>
                     </div>
                 </div>
 
